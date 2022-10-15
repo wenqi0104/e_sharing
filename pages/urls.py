@@ -7,12 +7,12 @@
 
 from django.urls import path
 from . import views
+from e_portal import views as pviews
 
 urlpatterns = [
     # 这里的index是定义在views里的index方法名
     # 填空就是默认进入的页面
-    path('', views.index, name='index'),
-
+    path('', pviews.test),
 ]
 
 
