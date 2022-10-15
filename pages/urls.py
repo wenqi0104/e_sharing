@@ -7,7 +7,7 @@
 
 from django.urls import path
 from . import views
-from e_portal import views as pviews
+from .views import Login,Register
 
 urlpatterns = [
     # 这里的index是定义在views里的index方法名
@@ -15,6 +15,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path("login/", Login.as_view(), name='login'),
     path("register/", Register.as_view(), name='register')
-]
 
+]
 
