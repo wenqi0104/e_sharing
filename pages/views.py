@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views import View
 
 
 # Create your views here
@@ -9,3 +10,15 @@ from django.shortcuts import render
 def index(request):
     # 这里的pages/index.html就是具体的文件
     return render(request, 'pages/index.html')
+
+
+class Login(View):
+    # 默认渲染页面的方式，没有任何操作，也没有传入任何值
+    def get(self, request):
+        return render(request, 'pages/login.html')
+
+
+class Register(View):
+    # 默认渲染页面的方式，没有任何操作，也没有传入任何值
+    def get(self, request):
+        return render(request, 'pages/register.html')
