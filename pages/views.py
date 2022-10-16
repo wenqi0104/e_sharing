@@ -22,3 +22,14 @@ class Register(View):
     # 默认渲染页面的方式，没有任何操作，也没有传入任何值
     def get(self, request):
         return render(request, 'pages/register.html')
+
+
+class PwdRest(View):
+    # 默认渲染页面的方式，没有任何操作，也没有传入任何值
+    def get(self, request):
+        return render(request, 'pages/pwd_reset.html')
+
+class Error404(View):
+    # 默认渲染页面的方式，没有任何操作，也没有传入任何值
+    def get(self, request):
+        return render(request, 'pages/404.html')
