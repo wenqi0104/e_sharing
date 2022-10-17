@@ -14,8 +14,8 @@ class Customers(models.Model):
     createDate: 用户注册日期，需要在前端使用 {{value.date|date:'d-m-Y'}} 过滤
     updateDate: 对该记录最后更新的日期，作用未知. 操作同上
     """
-    address = models.CharField(max_length=64)
-    nickName = models.CharField(max_length=8)
+    address = models.CharField(max_length=64, default="")
+    name = models.CharField(max_length=8)
     totalSpending = models.FloatField(default=0)
     balance = models.FloatField(default=0)
     email = models.EmailField(blank=False)
@@ -41,6 +41,22 @@ class Operators(models.Model):
     createDate = models.DateTimeField(default=timezone.now)
     updateDate = models.DateTimeField(auto_now=True)
 
+class Manangers(models.Model):
+    """
+    操作人员表
+    name:
+    email:
+    password:
+    createDate: 同上
+    updateDate: 同上
+    """
+    name = models.CharField(max_length=8)
+    # repairedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    # chargedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    email = models.EmailField(blank=False)
+    password = models.CharField(max_length=16)
+    createDate = models.DateTimeField(default=timezone.now)
+    updateDate = models.DateTimeField(auto_now=True)
 
 class Vehicles(models.Model):
     """

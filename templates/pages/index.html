@@ -6,14 +6,14 @@
         <hr>
         <!-- 这里使用的url命令进入Login页面 -->
         <h3>try login page</h3>
-        <a class="btn btn-dark" href="{% url 'pages:login' %}">Login Page</a>
+        <a class="btn btn-dark" href="{% url 'e_portal:login' %}">Login Page</a>
 
         <h3>try register page</h3>
-        <a class="btn btn-dark" href="{% url 'pages:register' %}">Register Page</a>
+        <a class="btn btn-dark" href="{% url 'e_portal:register' %}">Register Page</a>
         <h3>try pwd_reset page</h3>
-        <a class="btn btn-dark" href="{% url 'pages:pwd_reset' %}">Password Reseting Page</a>
+        <a class="btn btn-dark" href="{% url 'e_portal:pwd_reset' %}">Password Reseting Page</a>
         <h3>try error 404 page</h3>
-        <a class="btn btn-dark" href="{% url 'pages:error404' %}">404 Page</a>
+        <a class="btn btn-dark" href="{% url 'e_portal:error404' %}">404 Page</a>
     </div>
    </div>
 {% endblock %}
