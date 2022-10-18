@@ -31,7 +31,7 @@ def login(request):
             all = models.Manangers.objects.all()
         for i in all:
             if i.email == email and i.password == pwd:   #如果匹配则进入主界面
-                return redirect("/error404")
+                return redirect("/main")
         return render(request, 'pages/login.html')    #密码/邮箱错误，则重新输入
 
 
@@ -48,7 +48,7 @@ def register(request):
             return render(request, 'pages/register.html')
         # print(name, email, pwd)
         models.Customers.objects.create(name=name, email=email, password=pwd)
-        return redirect("/error404")
+        return redirect("/main")
 
 #重置密码
 def pwd_reset(request):
