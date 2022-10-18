@@ -13,18 +13,38 @@ class Customers(models.Model):
     password:
     createDate: 用户注册日期，需要在前端使用 {{value.date|date:'d-m-Y'}} 过滤
     updateDate: 对该记录最后更新的日期，作用未知. 操作同上
+    eligible: 用户是否可以租车
     """
-    address = models.CharField(max_length=64)
-    nickName = models.CharField(max_length=8)
+    address = models.CharField(max_length=64, default="")
+    name = models.CharField(max_length=8)
     totalSpending = models.FloatField(default=0)
-    balance = models.FloatField(default=0)
+    # balance = models.FloatField(default=0)
+    email = models.EmailField(blank=False)
+    password = models.CharField(max_length=16)
+    createDate = models.DateTimeField(default=timezone.now)
+    updateDate = models.DateTimeField(auto_now=True)
+    eligible = models.BooleanField(default=True)
+
+
+class Operators(models.Model):
+    """
+    操作人员表
+    name:
+    email:
+    password:
+    createDate: 同上
+    updateDate: 同上
+    """
+    name = models.CharField(max_length=8)
+    # repairedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    # chargedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
     email = models.EmailField(blank=False)
     password = models.CharField(max_length=16)
     createDate = models.DateTimeField(default=timezone.now)
     updateDate = models.DateTimeField(auto_now=True)
 
 
-class Operators(models.Model):
+class Manangers(models.Model):
     """
     操作人员表
     name:
@@ -55,6 +75,7 @@ class Vehicles(models.Model):
     locName: 车辆所在区域的名字
     latitude:
     longitude:
+    price:
     """
     type = models.CharField(max_length=8)
     cover = models.ImageField(upload_to='covers/', blank=True)
@@ -67,6 +88,7 @@ class Vehicles(models.Model):
     locName = models.CharField(max_length=16)
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
+    price = models.FloatField(default=0)
 
 
 class OperationsHistory(models.Model):
@@ -101,20 +123,20 @@ class Payments(models.Model):
     detail = models.CharField(max_length=128, default="")
 
 
-class TopUpHistory(models.Model):
-    """
-    用户充值记录表
-    amount: 充值金额
-    status:
-    topTime:
-    cid:
-    detail:
-    """
-    amount = models.IntegerField(blank=False)
-    status = models.CharField(max_length=8)
-    topTime = models.DateTimeField(timezone.now)
-    cid = models.ForeignKey('Customers', on_delete=models.CASCADE)
-    detail = models.CharField(max_length=128)
+# class TopUpHistory(models.Model):
+#     """
+#     用户充值记录表
+#     amount: 充值金额
+#     status:
+#     topTime:
+#     cid:
+#     detail:
+#     """
+#     amount = models.IntegerField(blank=False)
+#     status = models.CharField(max_length=8)
+#     topTime = models.DateTimeField(timezone.now)
+#     cid = models.ForeignKey('Customers', on_delete=models.CASCADE)
+#     detail = models.CharField(max_length=128)
 
 
 class RepairHistory(models.Model):
@@ -129,3 +151,13 @@ class RepairHistory(models.Model):
     repairedTime = models.DateTimeField(timezone.now)
     oid = models.ForeignKey('Operators', on_delete=models.CASCADE)
     vid = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+
+
+class Order(models.Model):
+    amount = models.FloatField(default=0)
+    status = models.CharField(default='unpaid', max_length=16)
+    startTime = models.DateTimeField(timezone.now)
+    endTime = models.DateTimeField(default='')
+    cid = models.ForeignKey('Customers', on_delete=models.CASCADE)
+    vid = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+
