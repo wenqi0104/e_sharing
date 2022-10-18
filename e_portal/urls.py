@@ -13,7 +13,7 @@ urlpatterns = [
     path("error404/", log.Error404, name='error404'),
 
     #customer
-
+    path("vehicles/", customer.index, name='vehicles_list'),
 
 
     #operator
