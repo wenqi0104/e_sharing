@@ -38,7 +38,7 @@ def getVehicleDetails(request):
     :param request:
     :return:
     """
-    return 0
+    return render(request, 'customers/vehicles_detail.html')
 
 
 def rentToOrder(request):
