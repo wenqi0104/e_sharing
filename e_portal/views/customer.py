@@ -58,8 +58,8 @@ def rentToOrder(request):
     :param request:
     :return:
     """
-    pass
-
+    # pass
+    return render(request, 'customers/rents.html')
 
 def payMethod(request):
     """

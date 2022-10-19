@@ -17,6 +17,7 @@ urlpatterns = [
     # 前端调试使用
     path("vehicles/1/", customer.getVehicleDetails, name='vehicles_detail'),
     # path("vehicles/<int:vehicles_id>/", customer.getVehicleDetails, name='vehicles_detail'),
+    path("rents", customer.rentToOrder, name='rents'),
 
 
 
