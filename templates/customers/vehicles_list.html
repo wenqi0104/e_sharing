@@ -21,9 +21,9 @@
                             <div class="dropdown-header">More Actions</div>
                             <!-- 这里的detail，results就是在urls.py 中的path（）注册的name属性值。也就是说，在path()中写出了name，之后跳转时就使用name的属性值就行了 -->
                             <!-- 带id用链接跳转的方法就是这个 -->
-                            <a class="dropdown-item" href="{%  url 'e_portal:rent' vehicles.id %}">Rent Directly</a>#}
+                            <a class="dropdown-item" href="{% url 'e_portal:rent' vehicles.id %}">Rent Directly</a>#}
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{%  url 'e_portal:rent' vehicles.id %}">Rent Directly</a>#}
+                            <a class="dropdown-item" href="{% url 'e_portal:rent' vehicles.id %}">Rent Directly</a>#}
                         </div>
                     </div>
                 </div>
