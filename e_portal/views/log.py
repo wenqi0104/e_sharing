@@ -6,6 +6,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from .. import models
+import globals
 
 #返回主页
 def index(request):
@@ -31,6 +32,7 @@ def login(request):
             all = models.Manangers.objects.all()
         for i in all:
             if i.email == email and i.password == pwd:   #如果匹配则进入主界面
+                globals.user_id = i.id
                 return redirect("/vehicles")
         return render(request, 'pages/login.html')    #密码/邮箱错误，则重新输入
 
