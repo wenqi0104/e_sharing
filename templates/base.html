@@ -15,6 +15,26 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+
+{#    google map api script here#}
+    <script type="text/javascript">
+        $(function () {
+            initialize();
+        });
+
+        var map = null;
+        //地图初始化
+        function initialize() {
+            var latlng = new google.maps.LatLng(22.563304, 113.988532); //创建坐标对象，定义经纬度值
+            var myOptions = {//定义地图初始化变量
+                zoom: 12, //设置初始缩放级别（0-21）
+                center: latlng, //设置初始地图中心点
+                mapTypeId: google.maps.MapTypeId.ROADMAP//设置初始地图类型为显示普通的街道地图
+            };
+            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions); //在指定的HTML容器中创建新的地图
+        }
+    </script>
 </head>
 <body id="page-top">
 
@@ -37,12 +57,9 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                    </div>
+
+                    <!-- Page Heading 作为管理员时再显示-->
+{#                    {% include 'partials/page_heading.html' %}#}
 
                     <!-- Content Row -->
                     <div class="row">
@@ -91,6 +108,8 @@
                         <a class="btn btn-primary" href="login.html">Logout</a>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -115,5 +134,9 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+{#     google map api #}
+    <script type="text/javascript" src="{% static 'vendor/jquery/jquery.js' %}"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false"></script>
 </body>
 </html>
