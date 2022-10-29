@@ -4,7 +4,7 @@ customer用户的所有接口
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .. import models
-import globals
+from . import globals
 from datetime import datetime
 
 
@@ -29,7 +29,7 @@ def getAvailableVehicles(request):
 
     # print(vehicles_list)
 
-    return render(request, "pages/index.html", {"vehicles_available": vehicles_available})
+    return render(request, "customers/vehicles_list.html", {"vehicles_available": vehicles_available})
 
 
 # vehicle_details页面返回函数
