@@ -101,8 +101,8 @@ class OperationsHistory(models.Model):
     """
     operationType = models.CharField(max_length=8)
     operateTime = models.DateTimeField(timezone.now)
-    oid = models.ForeignKey('Operators', on_delete=models.CASCADE)
-    vid = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    oid = models.IntegerField(default=0)
+    vid = models.IntegerField(default=0)
 
 
 class Payments(models.Model):
@@ -118,8 +118,8 @@ class Payments(models.Model):
     amount = models.FloatField(blank=False)
     status = models.CharField(max_length=8, default='success')
     payTime = models.DateTimeField(timezone.now)
-    cid = models.ForeignKey('Customers', on_delete=models.CASCADE)
-    vid = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    cid = models.IntegerField()
+    vid = models.IntegerField()
     detail = models.CharField(max_length=128, default="")
 
 
@@ -149,15 +149,15 @@ class RepairHistory(models.Model):
     """
     repairedLoc = models.CharField(max_length=16)
     repairedTime = models.DateTimeField(timezone.now)
-    oid = models.ForeignKey('Operators', on_delete=models.CASCADE)
-    vid = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    oid = models.IntegerField(default=0)
+    vid = models.IntegerField(default=0)
 
 
 class Order(models.Model):
-    amount = models.FloatField(default=0)
+    amount = models.FloatField(default=0.0)
     status = models.CharField(default='unpaid', max_length=16)
-    startTime = models.DateTimeField(timezone.now)
-    endTime = models.DateTimeField(default='')
-    cid = models.ForeignKey('Customers', on_delete=models.CASCADE)
-    vid = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
+    startTime = models.DateTimeField(default=timezone.now)
+    endTime = models.DateTimeField(default=timezone.now)
+    cid = models.IntegerField(default=0)
+    vid = models.IntegerField(default=0)
 
