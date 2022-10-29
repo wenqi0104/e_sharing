@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from .. import models
 from . import globals
+import django.utils.timezone as timezone
 
 #返回主页
 def index(request):
@@ -15,8 +16,13 @@ def index(request):
     else:
         return render(request, 'pages/404.html')
 
-#登录界面
+
+# 登录界面
 def login(request):
+    # add database, only run once
+    # models.Order.objects.create(amount="5", status="paid", cid=10, vid=1)
+    # models.Order.objects.create(amount="10", status="unpaid", cid=10, vid=2)
+
     if request.method == "GET":
         return render(request, 'pages/login.html')
     else:    #POST
