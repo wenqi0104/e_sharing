@@ -18,24 +18,6 @@
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 
-{#    google map api script here#}
-    <script type="text/javascript">
-        $(function () {
-            initialize();
-        });
-
-        var map = null;
-        //地图初始化
-        function initialize() {
-            var latlng = new google.maps.LatLng(22.563304, 113.988532); //创建坐标对象，定义经纬度值
-            var myOptions = {//定义地图初始化变量
-                zoom: 12, //设置初始缩放级别（0-21）
-                center: latlng, //设置初始地图中心点
-                mapTypeId: google.maps.MapTypeId.ROADMAP//设置初始地图类型为显示普通的街道地图
-            };
-            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions); //在指定的HTML容器中创建新的地图
-        }
-    </script>
 </head>
 <body id="page-top">
 
@@ -92,27 +74,6 @@
             <i class="fas fa-angle-up"></i>
         </a>
 
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
 
     </div>
 
@@ -139,8 +100,6 @@
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
-    {# google map api #}
-    <script type="text/javascript" src="{% static 'vendor/jquery/jquery.js' %}"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false"></script>
+
 </body>
 </html>

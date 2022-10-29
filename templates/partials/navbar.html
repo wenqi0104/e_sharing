@@ -30,9 +30,16 @@
     <!-- Navbar Navbar -->
 {#    <ul class="navbar-nav">#}
         {% if error_message %}
-            <div class=" alert alert-success alert-dismissible mt-3 mr-auto fade show">
+            <div class=" alert alert-warning alert-dismissible mt-3 mr-auto fade show">
              <a href="#" class="close" data-dismiss="alert">&times;</a>
              <strong>Failed！</strong>{{ error_message }}
+            </div>
+        {%  endif %}
+
+        {% if message %}
+            <div class=" alert alert-success alert-dismissible mt-3 mr-auto fade show">
+             <a href="#" class="close" data-dismiss="alert">&times;</a>
+             <strong>Failed！</strong>{{ message }}
             </div>
         {%  endif %}
             <!-- Error Alert -->
@@ -264,7 +271,7 @@
                     Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <button method="post" class="dropdown-item alert-success" href="#" data-toggle="modal" data-target="#logoutModal">
+                <button method="post" class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                 </button>
@@ -304,6 +311,28 @@
 {#        </li>#}
 
 {#    </ul>#}
+
+<!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to log out.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="{% url 'e_portal:login' %}">Logout</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
 
 </nav>
 <!-- End of Navbar -->
