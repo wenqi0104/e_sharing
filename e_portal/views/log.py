@@ -6,7 +6,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
 from .. import models
-import globals
+from . import globals
 
 #返回主页
 def index(request):

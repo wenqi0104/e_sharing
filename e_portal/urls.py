@@ -13,7 +13,7 @@ urlpatterns = [
     path("error404/", log.Error404, name='error404'),
 
     #customer
-    path("vehicles/", customer.index, name='vehicles_list'),
+    path("vehicles/", customer.getAvailableVehicles, name='vehicles_list'),
     # 前端调试使用
     path("vehicles/1/", customer.getVehicleDetails, name='vehicles_detail'),
     # path("vehicles/<int:vehicles_id>/", customer.getVehicleDetails, name='vehicles_detail'),
