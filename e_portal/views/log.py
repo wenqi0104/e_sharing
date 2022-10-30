@@ -22,7 +22,7 @@ def login(request):
     # add database, only run once
     # models.Order.objects.create(amount="5", status="paid", cid=10, vid=1)
     # models.Order.objects.create(amount=12, cid=8, vid=2)
-
+    globals.user_id = None
     if request.method == "GET":
         return render(request, 'pages/login.html')
     else:    #POST

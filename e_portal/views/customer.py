@@ -2,11 +2,14 @@
 customer用户的所有接口
 """
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .. import models
 from . import globals
 import django.utils.timezone as timezone
 
+
+
+from django.urls import reverse
 
 # Create your views here.
 
@@ -33,7 +36,7 @@ def getAvailableVehicles(request):
 
 
 # vehicle_details页面返回函数
-def getVehicleDetails(request, vid):
+def getVehicleDetails(request, vehicles_id):
     """
     根据前端返回的id，查找特定id的vehicle的信息
     返回这个车的所有信息
@@ -42,36 +45,30 @@ def getVehicleDetails(request, vid):
     :param request:
     :return:
     """
-    if request.method() == "GET":
-        return render(request, 'customers/vehicles_detail.html')
-    else:
-        details = models.Vehicles.objects.get(vid=vid)
-        return render(request, "pages/vehicles_details.html", {"details": details})
+    details = models.Vehicles.objects.get(id=vehicles_id)
+    return render(request, "customers/vehicles_detail.html", {"details": details})
 
 
 def rent(request, vehicles_id):
     uid = globals.user_id
     user = models.Customers.objects.get(id=uid)
 
-    if user.eligible == False:
-        return render(request, 'pages/vehicles_details.html',
-                      {"error_massage": "Please check if you have an unpaid order or a bike is not returned."})
+    if not user.eligible:
+        return HttpResponseRedirect(reverse('e_portal:rents'), {"error_message": "you can not order more than one car at a time!"})
 
-    # vid = request.PSOT.get('vid')
-    # details = models.Vehicles.objects.get(vid=vehicles_id)
 
     # 创建一个新的订单
     models.Order.objects.create(cid=uid, vid=vehicles_id)
 
-    # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
-
     # update models
-    models.Customers.objects.filter(id=uid).update(elgible=False)
+    models.Customers.objects.filter(id=uid).update(eligible=False)
     models.Vehicles.objects.filter(id=vehicles_id).update(status="using")
 
     msg = "Order created!"
 
-    return redirect(request, 'customers/rents.html', {"message": msg})
+    # redirect(request, '/rents/', {"message": msg})
+    return HttpResponseRedirect(reverse('e_portal:rents',args=(msg,)))
+    # return
 
 
 def pay(request, order_id):
@@ -84,7 +81,8 @@ def pay(request, order_id):
     user = models.Customers.objects.filter(id=order.cid)
     user.update(totalSpending=user.totalSpending + order.amount)
 
-    return redirect('customers/rents.html')
+    # redirect('customers/rents.html')
+    return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
 def returnVehicle(request, order_id):
@@ -95,23 +93,24 @@ def returnVehicle(request, order_id):
 
     # 拿到order和vehicle信息
     order = models.Order.objects.filter(id=order_id)
-    vehicle = models.Vehicles.objects.filter(id=order.vid)
+    vehicle = models.Vehicles.objects.filter(id=order[0].vid)
 
     # 计算费用并修改订单状态
-    use_time = (end_time - order.startTime).seconds / 3600 + 1  # 使用时间
-    amount = use_time * vehicle.price
+    use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
+    amount = use_time * vehicle[0].price
     order.update(amount=amount, endTime=end_time)
     # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态
-    vehicle.update(batteryPercentage=vehicle.batteryPercentage-use_time*10, totalRentalHours=vehicle.totalRentalHours+use_time)
-    if vehicle.batteryPercentage <= 20:
+    vehicle.update(batteryPercentage=vehicle[0].batteryPercentage-use_time*10, totalRentalHours=vehicle[0].totalRentalHours+use_time)
+    if vehicle[0].batteryPercentage <= 20:
         vehicle.update(status="low_battery")
     else:
-        vehicle.updates(status="available")
+        vehicle.update(status="available")
 
-    return redirect(request, 'customers/rents.html')
+    # redirect(request, '/rents/')
+    return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
 def report(request, order_id):
@@ -122,18 +121,18 @@ def report(request, order_id):
 
     # 拿到order和vehicle信息
     order = models.Order.objects.filter(id=order_id)
-    vehicle = models.Vehicles.objects.filter(id=order.vid)
+    vehicle = models.Vehicles.objects.filter(id=order[0].vid)
 
     # 计算费用并修改订单状态
-    use_time = (end_time - order.startTime).seconds / 3600 + 1  # 使用时间
-    amount = use_time * vehicle.price
+    use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
+    amount = use_time * vehicle[0].price
     order.update(amount=amount, endTime=end_time)
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态为broken
     vehicle.update(status="broken")
 
-    return redirect(request, 'customers/rents.html')
+    return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
 def rents(request):
@@ -159,13 +158,21 @@ def rents(request):
     uid = globals.user_id
     # user = models.Customers.objects.get(id=uid)
 
-    cur_order = models.Order.objetc.filter(endTime=None)
+    cur_order = models.Order.objects.filter(endTime=None,cid=uid)
     unpaid_orders = models.Order.objects.filter(status="unpaid", cid=uid)
-    cur_vid = cur_order.vid
-    cur_vehicle = models.Vehicles.objects.filter(id=cur_vid)
+    unpaid_vehicles = set()
+    for order in unpaid_orders:
+        unpaid_vehicle = models.Vehicles.objects.filter(id=order.vid)[0]
+        unpaid_vehicles.add(unpaid_vehicle)
 
-    return render(request, 'customers/rents.html', {"unpaid_orders": unpaid_orders, "cur_order": cur_order,
-                                                    "cur_vehicle": cur_vehicle})
+    if cur_order:
+        cur_vid = cur_order[0].vid
+        cur_vehicle = models.Vehicles.objects.filter(id=cur_vid)
+
+        return render(request, 'customers/rents.html', {"unpaid_orders": unpaid_orders, "cur_order": cur_order,
+                                                    "cur_vehicle": cur_vehicle,'unpaid_vehicles':unpaid_vehicles})
+    else:
+        return render(request, 'customers/rents.html', {"unpaid_orders": unpaid_orders,'unpaid_vehicles':unpaid_vehicles})
 
 
 # def payMethod(request): # POST
