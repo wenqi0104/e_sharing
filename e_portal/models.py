@@ -67,7 +67,7 @@ class Vehicles(models.Model):
     type: 车辆类型
     cover: 封面  upload_to表示上传到哪个文件
     color:
-    plateNum: 该区域有多少车
+    plateNum: 车牌号
     batteryPercentage:
     lastChargedTime:
     status: 车辆状态，有 broken/available/using/low_battery 四种
@@ -77,6 +77,7 @@ class Vehicles(models.Model):
     longitude:
     price:
     """
+    name = models.CharField(max_length=128)
     type = models.CharField(max_length=8)
     cover = models.ImageField(upload_to='covers/', blank=True)
     color = models.CharField(max_length=8)
@@ -89,6 +90,7 @@ class Vehicles(models.Model):
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
     price = models.FloatField(default=0)
+    description = models.TextField(default="")
 
 
 class OperationsHistory(models.Model):
@@ -157,7 +159,7 @@ class Order(models.Model):
     amount = models.FloatField(default=0.0)
     status = models.CharField(default='unpaid', max_length=16)
     startTime = models.DateTimeField(default=timezone.now)
-    endTime = models.DateTimeField(default=timezone.now)
+    endTime = models.DateTimeField(null=True, blank=True)
     cid = models.IntegerField(default=0)
     vid = models.IntegerField(default=0)
 
