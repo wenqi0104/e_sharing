@@ -21,7 +21,7 @@ def index(request):
 def login(request):
     # add database, only run once
     # models.Order.objects.create(amount="5", status="paid", cid=10, vid=1)
-    # models.Order.objects.create(amount="10", status="unpaid", cid=10, vid=2)
+    # models.Order.objects.create(amount=12, cid=8, vid=2)
 
     if request.method == "GET":
         return render(request, 'pages/login.html')
