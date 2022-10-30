@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .. import models
 from . import globals
-from datetime import datetime
+import django.utils.timezone as timezone
 
 
 # Create your views here.
@@ -49,7 +49,94 @@ def getVehicleDetails(request, vid):
         return render(request, "pages/vehicles_details.html", {"details": details})
 
 
-def rentToOrder(request):
+def rent(request, vehicles_id):
+    uid = globals.user_id
+    user = models.Customers.objects.get(id=uid)
+
+    if user.eligible == False:
+        return render(request, 'pages/vehicles_details.html',
+                      {"error_massage": "Please check if you have an unpaid order or a bike is not returned."})
+
+    # vid = request.PSOT.get('vid')
+    # details = models.Vehicles.objects.get(vid=vehicles_id)
+
+    # 创建一个新的订单
+    models.Order.objects.create(cid=uid, vid=vehicles_id)
+
+    # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
+
+    # update models
+    models.Customers.objects.filter(id=uid).update(elgible=False)
+    models.Vehicles.objects.filter(id=vehicles_id).update(status="using")
+
+    msg = "Order created!"
+
+    return redirect(request, 'customers/rents.html', {"message": msg})
+
+
+def pay(request, order_id):
+    order = models.Order.objects.filter(id=order_id)
+    order.update(status="paid")
+
+    # 新建Payments表
+    models.Payments.objects.create(amount=order.amount, cid=order.cid, vid=order.vid)
+    # 更新用户totalSpending
+    user = models.Customers.objects.filter(id=order.cid)
+    user.update(totalSpending=user.totalSpending + order.amount)
+
+    return redirect('customers/rents.html')
+
+
+def returnVehicle(request, order_id):
+    uid = globals.user_id
+    # 把endtime转为datetime形式
+    end_time = timezone.now()
+    # end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S.%f")
+
+    # 拿到order和vehicle信息
+    order = models.Order.objects.filter(id=order_id)
+    vehicle = models.Vehicles.objects.filter(id=order.vid)
+
+    # 计算费用并修改订单状态
+    use_time = (end_time - order.startTime).seconds / 3600 + 1  # 使用时间
+    amount = use_time * vehicle.price
+    order.update(amount=amount, endTime=end_time)
+    # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
+    # 修改用户状态
+    models.Customers.objects.filter(id=uid).update(eligible=True)
+    # 修改车辆状态
+    vehicle.update(batteryPercentage=vehicle.batteryPercentage-use_time*10, totalRentalHours=vehicle.totalRentalHours+use_time)
+    if vehicle.batteryPercentage <= 20:
+        vehicle.update(status="low_battery")
+    else:
+        vehicle.updates(status="available")
+
+    return redirect(request, 'customers/rents.html')
+
+
+def report(request, order_id):
+    uid = globals.user_id
+    # 把endtime转为datetime形式
+    end_time = timezone.now()
+    # end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S.%f")
+
+    # 拿到order和vehicle信息
+    order = models.Order.objects.filter(id=order_id)
+    vehicle = models.Vehicles.objects.filter(id=order.vid)
+
+    # 计算费用并修改订单状态
+    use_time = (end_time - order.startTime).seconds / 3600 + 1  # 使用时间
+    amount = use_time * vehicle.price
+    order.update(amount=amount, endTime=end_time)
+    # 修改用户状态
+    models.Customers.objects.filter(id=uid).update(eligible=True)
+    # 修改车辆状态为broken
+    vehicle.update(status="broken")
+
+    return redirect(request, 'customers/rents.html')
+
+
+def rents(request):
     """
     GET：
     返回两个对象
@@ -70,89 +157,15 @@ def rentToOrder(request):
     """
     # pass
     uid = globals.user_id
-    user = models.Customers.objects.get(id=uid)
+    # user = models.Customers.objects.get(id=uid)
 
-    # 从车辆详情页点击rent
-    if request.POST.get("method") == "rent":
-        if user.eligible == False:
-            return render(request, 'pages/vehicles_details.html', {"error_massage": "Please check if you have an unpaid order or a bike is not returned."})
+    cur_order = models.Order.objetc.filter(endTime=None)
+    unpaid_orders = models.Order.objects.filter(status="unpaid", cid=uid)
+    cur_vid = cur_order.vid
+    cur_vehicle = models.Vehicles.objects.filter(id=cur_vid)
 
-        # 新建订单，并拿到unpaid订单信息
-        vid = request.PSOT.get('vid')
-        details = models.Vehicles.objects.get(vid = vid) # POST
-        cur_order = models.Order.objects.create(status = "using", cid = uid, vid = vid)
-        unpaid_order = models.Order.objects.filter(cid = uid, status = "unpaid")
-
-        # update models
-        models.Customers.objects.filter(id=uid).update(elgible=False)
-        models.Vehicles.objects.filter(id=vid).update(status="using")
-
-        return render(request, 'customers/rents.html', {"details":details, "cur_order":cur_order, "unpaid_order":unpaid_order})
-
-    # 从当前页面（订单页面）点击return还车
-    elif request.POST.get("method") == "return":
-        order_id = request.POST.get("order_id")
-        # 把endtime转为datetime形式
-        end_time = str(request.POST.get("end_time")) # data_time
-        end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S.%f")
-
-        # 拿到order和vehicle信息
-        order = models.Order.objects.filter(id=order_id)
-        vehicle = models.Vehicles.objects.filter(id=order.vid)
-
-        # 计算费用并修改订单状态
-        use_time = (end_time - order.startTime).seconds / 3600 + 1  # 使用时间
-        amount = use_time * vehicle.price
-        order.update(amount=amount, endTime=end_time)
-        unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
-        # 修改用户状态
-        models.Customers.objects.filter(id=uid).update(eligible=True)
-        # 修改车辆状态
-        vehicle.update(batteryPercentage=vehicle.batteryPercentage-use_time*10, totalRentalHours=vehicle.totalRentalHours+use_time)
-        if vehicle.batteryPercentage <= 20:
-            vehicle.update(status="low_battery")
-        else:
-            vehicle.updates(status="available")
-
-        # 返回所有unpaid订单信息
-        return render(request, 'customers/rents.html', {"cur_order":None, "unpaid_order":unpaid_order})
-
-    # 从payMethod页面点击pay支付
-    elif request.POST.get("method") == "pay":
-        order_id = request.POST.get("order_id")
-        order = models.Order.objects.filter(id=order_id)
-        order.update(status="paid")
-
-        # 新建Payments表
-        models.Payments.objects.create(amount=order.amount, cid=order.cid, vid=order.vid)
-        # 更新用户totalSpending
-        user = models.Customers.objects.filter(id=order.cid)
-        user.update(totalSpending=user.totalSpending+order.amount)
-
-    # 从当前页面（订单页面）点击report上报车辆存坏
-    elif request.POST.get("method") == "report":
-        order_id = request.POST.get("order_id")
-        # 把endtime转为datetime形式
-        end_time = str(request.POST.get("end_time"))  # data_time
-        end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S.%f")
-
-        # 拿到order和vehicle信息
-        order = models.Order.objects.filter(id=order_id)
-        vehicle = models.Vehicles.objects.filter(id=order.vid)
-
-        # 计算费用并修改订单状态
-        use_time = (end_time - order.startTime).seconds / 3600 + 1  # 使用时间
-        amount = use_time * vehicle.price
-        order.update(amount=amount, endTime=end_time)
-        # 修改用户状态
-        models.Customers.objects.filter(id=uid).update(eligible=True)
-        # 修改车辆状态为broken
-        vehicle.update(status="broken")
-        render(request, 'pages/index.html')
-
-
-    else:
-        return render(request, 'customers/rents.html')
+    return render(request, 'customers/rents.html', {"unpaid_orders": unpaid_orders, "cur_order": cur_order,
+                                                    "cur_vehicle": cur_vehicle})
 
 
 # def payMethod(request): # POST
