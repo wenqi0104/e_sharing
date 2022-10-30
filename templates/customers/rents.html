@@ -33,11 +33,11 @@
                             </tfoot>
                             <tbody>
                             {% for cur_order in cur_order %}
-                                {% for vehicle_details in details %}
+                                {% for vehicle_details in cur_vehicle %}
                                     <tr>
                                         <td>{{ cur_order.id }}</td>
                                         <td>{{ vehicle_details.type }}</td>
-                                        <td>{{ vehicle_details.platNum }}</td>
+                                        <td>{{ vehicle_details.plateNum }}</td>
                                         <td>{{ vehicle_details.price }}</td>
                                         <td>{{ cur_order.startTime }}</td>
                                         <td>
@@ -46,8 +46,10 @@
                                         </td>
                                         <td>
                                             <div class="row">
-                                                <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
-
+                                                <form action="{% url 'e_portal:returnVehicle' cur_order.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
+                                                </form>
                                                 <a href="{% url 'e_portal:report' cur_order.id %}" class="btn btn-sm btn-secondary btn-user mx-1">Report</a>
                                             </div>
 
@@ -72,8 +74,7 @@
         </div>
     </div>
 
-    这里的unpaid_order里没有相关的车辆信息
-    {% if unpaid_order %}
+    {% if unpaid_orders %}
         <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -105,23 +106,22 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                            {% for unpaid_order in unpaid_order %}
-                                {% for vehicle_details in details %}
+                            {% for unpaid_orders in unpaid_orders %}
+                                {% for vehicle_details in unpaid_vehicles %}
                                     <tr>
-                                        <td>{{ unpaid_order.id }}</td>
+                                        <td>{{ unpaid_orders.id }}</td>
                                         <td>{{ vehicle_details.type }}</td>
-                                        <td>{{ vehicle_details.platNum }}</td>
+                                        <td>{{ vehicle_details.plateNum }}</td>
                                         <td>{{ vehicle_details.price }}</td>
-                                        <td>{{ unpaid_order.startTime }}</td>
+                                        <td>{{ unpaid_orders.startTime }}</td>
                                         <td>
-                                            <p class="m-0">{{ unpaid_order.status }}</p>
+                                            <p class="m-0">{{ unpaid_orders.status }}</p>
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Make Payment</button>
                                                 <button type="submit" class="btn btn-sm btn-secondary btn-user mx-1">Report</button>
                                             </div>
-
                                         </td>
                                     </tr>
                                 {% endfor %}
