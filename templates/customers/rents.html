@@ -5,7 +5,7 @@
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Current Rent Info</h6>
             </div>
-            {% if unpaid_orders %}
+            {% if cur_order %}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable">
@@ -47,7 +47,8 @@
                                         <td>
                                             <div class="row">
                                                 <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
-                                                <button type="submit" class="btn btn-sm btn-secondary btn-user mx-1">Report</button>
+
+                                                <a href="{% url 'e_portal:report' cur_order.id %}" class="btn btn-sm btn-secondary btn-user mx-1">Report</a>
                                             </div>
 
                                         </td>

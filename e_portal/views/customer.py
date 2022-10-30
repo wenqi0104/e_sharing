@@ -159,7 +159,7 @@ def rents(request):
     uid = globals.user_id
     # user = models.Customers.objects.get(id=uid)
 
-    cur_order = models.Order.objetc.filter(endTime=None)
+    cur_order = models.Order.objects.filter(endTime=None)
     unpaid_orders = models.Order.objects.filter(status="unpaid", cid=uid)
     cur_vid = cur_order.vid
     cur_vehicle = models.Vehicles.objects.filter(id=cur_vid)
