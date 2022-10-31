@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+
+    <head>
+        <style>
+            #hello:hover{
+                background-color: black;
+            }
+        </style>
+    </head>
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -31,23 +39,23 @@
                             </tfoot>
                             <tbody>
                             {% for cur_order in cur_item %}
-                                    <tr>
-                                        <td>{{ cur_order.id }}</td>
-                                        <td>{{ cur_order.v_type }}</td>
-                                        <td>{{ cur_order.plate_num }}</td>
-                                        <td>{{ price }}</td>
-                                        <td>{{ cur_order.start_time }}</td>
-                                        <td>
-                                            <div class="row">
-                                                <form action="{% url 'e_portal:returnVehicle' cur_order.oid %}" method="post">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
-                                                </form>
-                                                <a href="{% url 'e_portal:report' cur_order.oid %}" class="btn btn-sm btn-secondary btn-user mx-1">Report</a>
-                                            </div>
+                                <tr>
+                                    <td>{{ cur_order.id }}</td>
+                                    <td>{{ cur_order.v_type }}</td>
+                                    <td>{{ cur_order.plate_num }}</td>
+                                    <td>{{ cur_order.price }}</td>
+                                    <td>{{ cur_order.start_time }}</td>
+                                    <td>
+                                        <div class="row">
+                                            <form action="{% url 'e_portal:returnVehicle' cur_order.oid %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
+                                            </form>
+                                            <a href="{% url 'e_portal:report' cur_order.oid %}" class="btn btn-sm btn-secondary btn-user mx-1">Report</a>
+                                        </div>
 
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
@@ -134,7 +142,7 @@
 {#                                                        <div class="modal-body col-xl-6 col-md-10 col-lg-12 mb-4">#}
                                                         <div class="modal-body container-fluid">
                                                             <div class="row">
-                                                                <div class="col-xs-12 col-lg-6 my-1">
+                                                                <div id="hello" class="col-xs-12 col-lg-6 my-1">
                                                                     <div class="card border-left-primary shadow h-100 py-2">
                                                                         <div class="card-body">
                                                                             <div class="row no-gutters align-items-center">
