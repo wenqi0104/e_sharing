@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+
+
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -87,9 +89,9 @@
                                     <th>OrderId</th>
                                     <th>Vehicle Type</th>
                                     <th>Vehicle Plate Num</th>
-                                    <th>Price</th>
-                                    <th>Start date</th>
-                                    <th>Status</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Total Price</th>
                                     <th>Operation</th>
                                 </tr>
                             </thead>
@@ -98,149 +100,154 @@
                                     <th>OrderId</th>
                                     <th>Vehicle Type</th>
                                     <th>Vehicle Plate Num</th>
-                                    <th>Price</th>
-                                    <th>Start date</th>
-                                    <th>Status</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Total Price</th>
                                     <th>Operation</th>
                                 </tr>
                             </tfoot>
                             <tbody>
+                            {% with count=0 %}
                             {% for unpaid_orders in unpaid_orders %}
-                                {% for vehicle_details in unpaid_vehicles %}
-                                    <tr>
-                                        <td>{{ unpaid_orders.id }}</td>
-                                        <td>{{ vehicle_details.type }}</td>
-                                        <td>{{ vehicle_details.plateNum }}</td>
-                                        <td>{{ vehicle_details.price }}</td>
-                                        <td>{{ unpaid_orders.startTime }}</td>
-                                        <td>
-                                            <p class="m-0">{{ unpaid_orders.status }}</p>
-                                        </td>
-                                        <td>
-                                            <div class="row">
-                                                <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#makePayment">Make Payment</button>
-                                                <button method="post" class="btn btn-sm btn-secondary btn-user mx-1" data-toggle="modal" data-target="#reportModal">Report</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                        <!-- Payment Modal-->
-                                        <div class="modal fade" id="makePayment" tabindex="-1" role="dialog" aria-labelledby="pay"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="pay">Select payment method: </h5>
-                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <form action="{% url 'e_portal:report' unpaid_orders.id %}" method="post">
-                                                        {% csrf_token %}
+                            {% count+=1 %}
+                                <tr>
+                                    <td>{{ count }}</td>
+                                    <td>{{ vehicle_details.type }}</td>
+                                    <td>{{ vehicle_details.plateNum }}</td>
+                                    <td>{{ unpaid_orders.startTime }}</td>
+                                    <td>{{ unpaid_orders.endTime }}</td>
+                                    <td>{{ unpaid_orders.amount }}</td>
+                                    <td>
+                                        <p class="m-0">{{ unpaid_orders.status }}</p>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#makePayment">Make Payment</button>
+                                            <button method="post" class="btn btn-sm btn-secondary btn-user mx-1" data-toggle="modal" data-target="#reportModal">Report</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                    <!-- Payment Modal-->
+                                    <div class="modal fade" id="makePayment" tabindex="-1" role="dialog" aria-labelledby="pay"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="pay">Select payment method: </h5>
+                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <form action="{% url 'e_portal:report' unpaid_orders.id %}" method="post">
+                                                    {% csrf_token %}
 
 {#                                                        <div class="modal-body col-xl-6 col-md-10 col-lg-12 mb-4">#}
-                                                        <div class="modal-body container-fluid">
-                                                            <div class="row">
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Paypal</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-paypal fa-2x text-primary"></i>
-                                                                                </div>
+                                                    <div class="modal-body container-fluid">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-lg-6 my-1">
+                                                                <div class="card border-left-primary shadow h-100 py-2">
+                                                                    <div class="card-body">
+                                                                        <div class="row no-gutters align-items-center">
+                                                                            <div class="col mr-2">
+                                                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                    Paypal</div>
+                                                                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                <i class="bi bi-paypal fa-2x text-primary"></i>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Ali pay</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-alipay fa-2x text-primary"></i>
-                                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-lg-6 my-1">
+                                                                <div class="card border-left-primary shadow h-100 py-2">
+                                                                    <div class="card-body">
+                                                                        <div class="row no-gutters align-items-center">
+                                                                            <div class="col mr-2">
+                                                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                    Ali pay</div>
+                                                                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                <i class="bi bi-alipay fa-2x text-primary"></i>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Wechat Pay</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-wechat fa-2x text-success"></i>
-                                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-lg-6 my-1">
+                                                                <div class="card border-left-primary shadow h-100 py-2">
+                                                                    <div class="card-body">
+                                                                        <div class="row no-gutters align-items-center">
+                                                                            <div class="col mr-2">
+                                                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                    Wechat Pay</div>
+                                                                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                <i class="bi bi-wechat fa-2x text-success"></i>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Credit Card</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-credit-card-fill fa-2x text-info"></i>
-                                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-lg-6 my-1" id="hello">
+                                                                <div class="card border-left-primary shadow h-100 py-2">
+                                                                    <div class="card-body">
+                                                                        <div class="row no-gutters align-items-center">
+                                                                            <div class="col mr-2">
+                                                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                    Credit Card</div>
+                                                                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                <i class="bi bi-credit-card-fill fa-2x text-info"></i>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer justify-content-start">
-                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-success">Confirm Payment</button></button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       <!-- Report Modal-->
-                                        <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="makeReport"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="makeReport">Enter your description here: </h5>
-                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
                                                     </div>
-                                                    <form action="{% url 'e_portal:report' unpaid_orders.id %}" method="post">
-                                                        {% csrf_token %}
-                                                        <div class="modal-body form-group">
-                                                            <label for="name">Describe what went wrong with the vehicle:  </label>
-                                                            <textarea class="form-control" rows="9"></textarea>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                            <button class="btn btn-primary">Report</button></button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    <div class="modal-footer justify-content-start">
+                                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                        <form action="{% url 'e_portal:payment' unpaid_orders.id %}" method="post">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-success">Confirm Payment</button></button>
+                                                        </form>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                {% endfor %}
+                                    </div>
+                                   <!-- Report Modal-->
+                                    <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="makeReport">Enter your description here: </h5>
+                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <form action="{% url 'e_portal:report' unpaid_orders.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body form-group">
+                                                        <label for="name">Describe what went wrong with the vehicle:  </label>
+                                                        <textarea class="form-control" rows="9"></textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                        <button class="btn btn-primary">Report</button></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                             {% endfor %}
+                            {% endwith %}
                             </tbody>
                         </table>
                     </div>
