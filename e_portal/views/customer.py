@@ -31,7 +31,7 @@ class PaymentsItems:
         self.v_type = vehicle.type
         self.plate_num = vehicle.plateNum
         self.amount = payment.amount
-        self.pay_time = payment.pay_time
+        self.pay_time = payment.payTime
 
 
 def index(request):
