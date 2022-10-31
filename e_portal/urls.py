@@ -30,6 +30,8 @@ urlpatterns = [
     path("return/<int:order_id>/", customer.returnVehicle, name='returnVehicle'),
     # rental info page
     path("rents/", customer.rents, name='rents'),
+    # payment history
+    path("history/",customer.getPaymentHistory, name='paymentHistory'),
 
     # operator
     path("operators/vehicles_using/", operator.getUsingVehicles, name='vehicles_using'),
