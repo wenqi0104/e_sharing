@@ -25,22 +25,28 @@ def login(request):
     globals.user_id = None
     if request.method == "GET":
         return render(request, 'pages/login.html')
-    else:    #POST
+    else:  # POST
         name = request.POST.get('name')
-        email = request.POST.get('email')  #暂时没有email判断重复注册的功能
+        email = request.POST.get('email')  # 暂时没有email判断重复注册的功能
         pwd = request.POST.get('pwd')
         type = request.POST.get('type')
-        if type == "customer":    #判断用户类型
+        if type == "customer":  # 判断用户类型
             all = models.Customers.objects.all()
+            for i in all:
+                if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
+                    globals.user_id = i.id
+                    return redirect("/vehicles")
         elif type == "operator":
             all = models.Operators.objects.all()
+            for i in all:
+                if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
+                    globals.user_id = i.id
+                    request.session['oid'] = i.id  # 设置session值
+                    return redirect("operators/vehicles_available/")
         else:
             all = models.Manangers.objects.all()
-        for i in all:
-            if i.email == email and i.password == pwd:   #如果匹配则进入主界面
-                globals.user_id = i.id
-                return redirect("/vehicles")
-        return render(request, 'pages/login.html')    #密码/邮箱错误，则重新输入
+
+        return render(request, 'pages/login.html')  # 密码/邮箱错误，则重新输入
 
 
 
