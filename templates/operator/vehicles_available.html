@@ -46,7 +46,9 @@
                                 <p id="ellipsis-ex" class="card-text mb-1"
                                    style="display: -webkit-box;display: -moz-box;white-space: pre-wrap;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical; -webkit-line-clamp:2;">{{ vehicles.description }}</p>
                                 <p class="text-dark">Color: &nbsp
-                                    <b class="text-body">{{ vehicles.color }}</b>
+                                    <b class="text-body">{{ vehicles.color }}</b> &nbsp &nbsp
+                                    locName: &nbsp
+                                    <b class="text-success">{{ vehicles.locName }}</b>
                                 </p>
                                 <p class="text-dark">Battery: &nbsp<b
                                         class="text-body">{{ vehicles.batteryPercentage }}</b></p>
@@ -84,6 +86,7 @@
                         },
                         success:function(data){
                             console.log("success");
+                            window.location.reload("card-body");
                         },
                         error:function (data){
                             console.log("error");

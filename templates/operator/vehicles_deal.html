@@ -28,7 +28,7 @@
                                     <button class="dropdown-item" type="button" data-vid="{{ vehicles.id }}" onclick="charge({{ vehicles.id }})">Charge</button>
                                 {% endif %}
                                 {% if vehicles.status == "broken" %}
-                                     <button class="dropdown-item" type="button" data-vid="{{ vehicles.id }}" onclick="repair({{ vehicles.id }}, {{ vehicles.locName }})">Repair</button>
+                                     <button class="dropdown-item" type="button" data-vid="{{ vehicles.id }}" onclick="repair({{ vehicles.id }}, '{{ vehicles.locName }}')">Repair</button>
                                 {% endif %}
                             </div>
                         </div>
@@ -83,6 +83,7 @@
                         },
                         success:function(data){
                             console.log("success");
+                            window.location.reload("card-body");
                         },
                         error:function (data){
                             console.log("error");
@@ -101,6 +102,7 @@
                         },
                         success:function(data){
                             console.log("success");
+                            window.location.reload("card-body");
                         },
                         error:function (data){
                             console.log("error");
