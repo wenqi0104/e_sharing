@@ -32,7 +32,17 @@ urlpatterns = [
     path("rents/", customer.rents, name='rents'),
 
     # operator
-
+    path("operators/vehicles_using/", operator.getUsingVehicles, name='vehicles_using'),
+    path("operators/vehicles_available/", operator.getUnUsingVehicles, name='vehicles_available'),
+    path("operators/vehicles_deal/", operator.getDealVehicles, name='vehicles_deal'),
+    path("move/", operator.moveVehicles),
+    path("charge/", operator.chargeVehicles),
+    path("repair/", operator.repairVehicles),
+    # debugging
+    path("vehicles_using/", operator.getUsingVehicles),
+    path("vehicles_unusing/", operator.getUnUsingVehicles),
+    path("vehicles_move/", operator.moveVehicles),
+    path("vehicles_deal/", operator.getDealVehicles)
     # manager
 
 ]
