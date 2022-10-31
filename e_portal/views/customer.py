@@ -23,6 +23,17 @@ class RentsItems:
         self.vid = vehicle.id
 
 
+class PaymentsItems:
+    id, v_type, plate_num, amount, pay_time = None, None, None, None, None
+
+    def __init__(self, payment, vehicle):
+        self.id = payment.id
+        self.v_type = vehicle.type
+        self.plate_num = vehicle.plateNum
+        self.amount = payment.amount
+        self.pay_time = payment.payTime
+
+
 def index(request):
     if request.method == "GET":
         return render(request, 'customers/vehicles_list.html')
@@ -218,5 +229,11 @@ def showMap(request):
     vehicle_all = models.Vehicles.objects.all()
     return render(request, 'pages/index.html', {"vehicle_all": vehicle_all})
 
+
 def getPaymentHistory(request):
-    return render(request, 'customers/payment_history.html')
+    payments = models.Payments.objects.all()
+    paymentHistory = []
+    for payment in payments:
+        vehicle = models.Vehicles.objects.filter(id=payment.vid)
+        paymentHistory.append(PaymentsItems(payment, vehicle[0]))
+    return render(request, 'customers/payment_history.html', {"paymentHistory": paymentHistory})
