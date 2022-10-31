@@ -6,12 +6,21 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .. import models
 from . import globals
 import django.utils.timezone as timezone
-
-
-
 from django.urls import reverse
 
-# Create your views here.
+
+class RentsItems:
+    oid, v_type, plate_num, start_time, end_time, amount, vid = None, None, None, None, None, None, None
+
+    def __init__(self, order, vehicle):
+        self.oid = order.id
+        self.v_type = vehicle.type
+        self.plate_num = vehicle.plateNum
+        self.start_time = order.startTime
+        self.end_time = order.endTime
+        self.amount = order.amount
+        self.vid = vehicle.id
+
 
 def index(request):
     if request.method == "GET":
@@ -29,8 +38,6 @@ def getAvailableVehicles(request):
     :return:
     """
     vehicles_available = models.Vehicles.objects.filter(status="available")
-
-    # print(vehicles_list)
 
     return render(request, "customers/vehicles_list.html", {"vehicles_available": vehicles_available})
 
@@ -54,8 +61,8 @@ def rent(request, vehicles_id):
     user = models.Customers.objects.get(id=uid)
 
     if not user.eligible:
-        return HttpResponseRedirect(reverse('e_portal:rents'), {"error_message": "you can not order more than one car at a time!"})
-
+        return HttpResponseRedirect(reverse('e_portal:rents'),
+                                    {"error_message": "you can not order more than one car at a time!"})
 
     # 创建一个新的订单
     models.Order.objects.create(cid=uid, vid=vehicles_id)
@@ -67,7 +74,7 @@ def rent(request, vehicles_id):
     msg = "Order created!"
 
     # redirect(request, '/rents/', {"message": msg})
-    return HttpResponseRedirect(reverse('e_portal:rents',args=(msg,)))
+    return HttpResponseRedirect(reverse('e_portal:rents', args=(msg,)))
     # return
 
 
@@ -75,7 +82,7 @@ def pay(request, order_id):
     order = models.Order.objects.filter(id=order_id)
     order.update(status="paid")
 
-    # 新建Payments表
+    # 新建Payments记录
     models.Payments.objects.create(amount=order.amount, cid=order.cid, vid=order.vid)
     # 更新用户totalSpending
     user = models.Customers.objects.filter(id=order.cid)
@@ -103,7 +110,8 @@ def returnVehicle(request, order_id):
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态
-    vehicle.update(batteryPercentage=vehicle[0].batteryPercentage-use_time*10, totalRentalHours=vehicle[0].totalRentalHours+use_time)
+    vehicle.update(batteryPercentage=vehicle[0].batteryPercentage - use_time * 10,
+                   totalRentalHours=vehicle[0].totalRentalHours + use_time)
     if vehicle[0].batteryPercentage <= 20:
         vehicle.update(status="low_battery")
     else:
@@ -156,23 +164,30 @@ def rents(request):
     """
     # pass
     uid = globals.user_id
-    # user = models.Customers.objects.get(id=uid)
 
-    cur_order = models.Order.objects.filter(endTime=None,cid=uid)
+    cur_order = models.Order.objects.filter(endTime=None, cid=uid)
     unpaid_orders = models.Order.objects.filter(status="unpaid", cid=uid)
-    unpaid_vehicles = set()
+    unpaid_vehicles = list()
     for order in unpaid_orders:
-        unpaid_vehicle = models.Vehicles.objects.filter(id=order.vid)[0]
-        unpaid_vehicles.add(unpaid_vehicle)
+        unpaid_vehicle = models.Vehicles.objects.get(id=order.vid)
+        unpaid_vehicles.append(unpaid_vehicle)
+
+    # oid, v_type, plate_num, start_time, end_time, amount, vid
+    rents_items = list()
+    for i in range(len(unpaid_orders)):
+        order = unpaid_orders[i]
+        vehicle = unpaid_vehicles[i]
+        item = RentsItems(order, vehicle)
+        rents_items.append(item)
 
     if cur_order:
         cur_vid = cur_order[0].vid
-        cur_vehicle = models.Vehicles.objects.filter(id=cur_vid)
+        cur_vehicle = models.Vehicles.objects.get(id=cur_vid)
+        cur_item = RentsItems(cur_order, cur_vehicle)
 
-        return render(request, 'customers/rents.html', {"unpaid_orders": unpaid_orders, "cur_order": cur_order,
-                                                    "cur_vehicle": cur_vehicle,'unpaid_vehicles':unpaid_vehicles})
+        return render(request, 'customers/rents.html', {"cur_item": cur_item, "rents_items": rents_items})
     else:
-        return render(request, 'customers/rents.html', {"unpaid_orders": unpaid_orders,'unpaid_vehicles':unpaid_vehicles})
+        return render(request, 'customers/rents.html', {"rents_items": rents_items})
 
 
 # def payMethod(request): # POST
@@ -200,4 +215,4 @@ def showMap(request):
     :return:
     """
     vehicle_all = models.Vehicles.objects.all()
-    return render(request, 'pages/index.html', {"vehicle_all":vehicle_all})
+    return render(request, 'pages/index.html', {"vehicle_all": vehicle_all})
