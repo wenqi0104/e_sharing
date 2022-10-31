@@ -84,10 +84,10 @@ def pay(request, order_id):
     order.update(status="paid")
 
     # 新建Payments记录
-    models.Payments.objects.create(amount=order.amount, cid=order.cid, vid=order.vid)
+    models.Payments.objects.create(amount=order[0].amount, cid=order[0].cid, vid=order[0].vid)
     # 更新用户totalSpending
-    user = models.Customers.objects.filter(id=order.cid)
-    user.update(totalSpending=user.totalSpending + order.amount)
+    user = models.Customers.objects.filter(id=order[0].cid)
+    user.update(totalSpending=user[0].totalSpending + order[0].amount)
 
     # redirect('customers/rents.html')
     return HttpResponseRedirect(reverse('e_portal:rents'))
