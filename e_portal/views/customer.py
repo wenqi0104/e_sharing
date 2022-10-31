@@ -10,7 +10,7 @@ from django.urls import reverse
 
 
 class RentsItems:
-    oid, v_type, plate_num, start_time, end_time, amount, vid = None, None, None, None, None, None, None
+    oid, v_type, plate_num, start_time, end_time, amount, price, vid = None, None, None, None, None, None, None, None
 
     def __init__(self, order, vehicle):
         self.oid = order.id
@@ -19,6 +19,7 @@ class RentsItems:
         self.start_time = order.startTime
         self.end_time = order.endTime
         self.amount = order.amount
+        self.price = vehicle.price
         self.vid = vehicle.id
 
 
