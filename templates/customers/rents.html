@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <head>
-        <style>
-            #hello:hover{
-                background-color: black;
-            }
-        </style>
-    </head>
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -87,9 +80,9 @@
                                     <th>OrderId</th>
                                     <th>Type</th>
                                     <th>Plate Num</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
                                     <th>Price</th>
-                                    <th>Start Time</th>
-                                    <th>Start Time</th>
 {#                                    <th>Status</th>#}
                                     <th>Operation</th>
                                 </tr>
@@ -115,13 +108,10 @@
                                         <td>{{ unpaid_orders.start_time }}</td>
                                         <td>{{ unpaid_orders.end_time }}</td>
                                         <td>{{ unpaid_orders.amount }}</td>
-{#                                        <td>#}
-{#                                            <p class="m-0">{{ unpaid_orders.status }}</p>#}
-{#                                        </td>#}
                                         <td>
                                             <div class="row">
                                                 <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#makePayment">Make Payment</button>
-                                                <button method="post" class="btn btn-sm btn-secondary btn-user mx-1" data-toggle="modal" data-target="#reportModal">Report</button>
+                                                <button method="post" class="btn btn-sm btn-warning btn-user mx-1" data-toggle="modal" data-target="#reportModal">Report</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -138,7 +128,8 @@
                                                     </div>
                                                     <form action="{% url 'e_portal:payment' unpaid_orders.oid %}" method="post">
                                                         {% csrf_token %}
-
+                                                        {{ unpaid_orders.oid }}
+                                                        {{ unpaid_orders.amount }}
 {#                                                        <div class="modal-body col-xl-6 col-md-10 col-lg-12 mb-4">#}
                                                         <div class="modal-body container-fluid">
                                                             <div class="row">
@@ -148,7 +139,12 @@
                                                                             <div class="row no-gutters align-items-center">
                                                                                 <div class="col mr-2">
                                                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Paypal</div>
+                                                                                        <div class="form-check">
+                                                                                          <input type="radio" class="form-check-input" id="radio1" name="optradio" value="ali pay" checked>
+                                                                                          <label class="form-check-label" for="radio1">
+                                                                                        Paypal</label>
+                                                                                        </div>
+                                                                                    </div>
                                                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
                                                                                 </div>
                                                                                 <div class="col-auto">
@@ -164,7 +160,12 @@
                                                                             <div class="row no-gutters align-items-center">
                                                                                 <div class="col mr-2">
                                                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Ali pay</div>
+                                                                                        <div class="form-check">
+                                                                                          <input type="radio" class="form-check-input" id="radio2" name="optradio">
+                                                                                          <label class="form-check-label" for="radio2">
+                                                                                        Ali pay</label>
+                                                                                        </div>
+                                                                                    </div>
                                                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
                                                                                 </div>
                                                                                 <div class="col-auto">
@@ -180,7 +181,11 @@
                                                                             <div class="row no-gutters align-items-center">
                                                                                 <div class="col mr-2">
                                                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Wechat Pay</div>
+                                                                                        <div class="form-check">
+                                                                                          <input type="radio" class="form-check-input" id="radio3" name="optradio">
+                                                                                          <label class="form-check-label" for="radio3">Wechat Pay</label>
+                                                                                        </div>
+                                                                                    </div>
                                                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
                                                                                 </div>
                                                                                 <div class="col-auto">
@@ -196,7 +201,11 @@
                                                                             <div class="row no-gutters align-items-center">
                                                                                 <div class="col mr-2">
                                                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Credit Card</div>
+                                                                                       <div class="form-check">
+                                                                                          <input type="radio" class="form-check-input" id="radio4" name="optradio">
+                                                                                          <label class="form-check-label" for="radio4">Credit Card</label>
+                                                                                       </div>
+                                                                                    </div>
                                                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
                                                                                 </div>
                                                                                 <div class="col-auto">
@@ -209,8 +218,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer justify-content-start">
-                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                                                             <button type="submit" class="btn btn-success">Confirm Payment</button></button>
+                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -235,7 +244,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                            <button class="btn btn-primary">Report</button></button>
+                                                            <button class="btn btn-warning">Report</button></button>
                                                         </div>
                                                     </form>
                                                 </div>
