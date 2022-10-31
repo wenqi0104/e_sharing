@@ -217,3 +217,6 @@ def showMap(request):
     """
     vehicle_all = models.Vehicles.objects.all()
     return render(request, 'pages/index.html', {"vehicle_all": vehicle_all})
+
+def getPaymentHistory(request):
+    return render(request, 'customers/payment_history.html')
