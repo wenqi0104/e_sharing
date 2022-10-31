@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{#    current order#}
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -40,11 +40,57 @@
                                     <td>{{ cur_order.start_time }}</td>
                                     <td>
                                         <div class="row">
-                                            <form action="{% url 'e_portal:returnVehicle' cur_order.oid %}" method="post">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
-                                            </form>
-                                            <a href="{% url 'e_portal:report' cur_order.oid %}" class="btn btn-sm btn-secondary btn-user mx-1">Report</a>
+                                            <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#returnVehicle{{ unpaid_orders.oid }}">Return</button>
+                                            <button method="post" class="btn btn-sm btn-warning btn-user mx-1" data-toggle="modal" data-target="#makeReport{{ unpaid_orders.oid }}">Report</button>
+                                        </div>
+                                        <!-- Return Vehicle Modal -->
+                                        <div class="modal fade" id="returnVehicle{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="makeReport">Are you sure to return the Vehicle? </h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{% url 'e_portal:returnVehicle' unpaid_orders.oid %}" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="modal-body form-group">
+                                                            <label for="name">Select "Return" below if you are ready to return the vehicle.</label>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                            <button class="btn btn-warning">Return</button></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Report Modal -->
+                                        <div class="modal fade" id="makeReport{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="makeReport">Enter your description here: </h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{% url 'e_portal:report' unpaid_orders.oid %}" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="modal-body form-group">
+                                                            <label for="name">Describe what went wrong with the vehicle:  </label>
+                                                            <textarea class="form-control" rows="9"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                            <button class="btn btn-warning">Report</button></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </td>
@@ -66,6 +112,7 @@
         </div>
     </div>
 
+{#    unpaid order#}
     {% if rents_items %}
         <div class="container-fluid">
         <div class="card shadow mb-4">
