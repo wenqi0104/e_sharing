@@ -6,6 +6,8 @@ import math
 import random
 import time
 
+import geocoder
+from geocoder import arcgis
 from django.core import serializers
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
@@ -13,8 +15,10 @@ from .. import models
 
 
 # Create your views here.
-
-def generate_random_gps(base_log=102.7, base_lat=25, radius=1000000):
+# base_log：经度基准点，
+# base_lat：维度基准点，
+# radius：距离基准点的半径
+def generate_random_gps(base_log=55.85806, base_lat=-4.25889, radius=100000):
     radius_in_degrees = radius / 111300
     u = float(random.uniform(0.0, 1.0))
     v = float(random.uniform(0.0, 1.0))
@@ -24,9 +28,13 @@ def generate_random_gps(base_log=102.7, base_lat=25, radius=1000000):
     y = w * math.sin(t)
     longitude = y + base_log
     latitude = x + base_lat
+    locName = geocoder.arcgis([longitude, latitude], method='reverse').address
     longitude = '%.2f' % longitude
     latitude = '%.2f' % latitude
-    return longitude, latitude
+
+    return longitude, latitude, locName
+    # data = {"longitude": longitude, "latitude": latitude, "locName": locName}
+    # return JsonResponse(data)
 
 
 def moveVehicles(request):
@@ -39,9 +47,10 @@ def moveVehicles(request):
     if request.method == "POST":
         vid = request.POST.get("vid")
         oid = request.session.get('oid')
-        longitude, latitude = generate_random_gps()
-        models.Vehicles.objects.filter(id=vid).update(longitude=longitude, latitude=latitude)
-        models.OperationsHistory.objects.create(operationType='move', oid=oid, vid=vid, operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
+        longitude, latitude, locName = generate_random_gps()
+        models.Vehicles.objects.filter(id=vid).update(longitude=longitude, latitude=latitude, locName=locName)
+        models.OperationsHistory.objects.create(operationType='move', oid=oid, vid=vid,
+                                                operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
         data = {"success_msg": "success"}
         return JsonResponse(data)
 
@@ -91,7 +100,8 @@ def chargeVehicles(request):
         vid = request.POST.get("vid")
         oid = request.session.get('oid')
         models.Vehicles.objects.filter(id=vid).update(status="available", batteryPercentage=100)
-        models.OperationsHistory.objects.create(operationType=apply_type, oid=oid, vid=vid, operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
+        models.OperationsHistory.objects.create(operationType=apply_type, oid=oid, vid=vid,
+                                                operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
         data = {"success_msg": "success"}
         return JsonResponse(data)
 
@@ -103,7 +113,9 @@ def repairVehicles(request):
         locName = request.POST.get("locName")
         oid = request.session.get('oid')
         models.Vehicles.objects.filter(id=vid).update(status="available")
-        models.OperationsHistory.objects.create(operationType=apply_type, oid=oid, vid=vid, operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
-        models.RepairHistory.objects.create(repairedLoc=locName, oid=oid, vid=vid, repairedTime=time.strftime('%Y-%m-%d %H:%M:%S'))
+        models.OperationsHistory.objects.create(operationType=apply_type, oid=oid, vid=vid,
+                                                operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
+        models.RepairHistory.objects.create(repairedLoc=locName, oid=oid, vid=vid,
+                                            repairedTime=time.strftime('%Y-%m-%d %H:%M:%S'))
         data = {"success_msg": "success"}
         return JsonResponse(data)
