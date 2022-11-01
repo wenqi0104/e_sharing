@@ -39,8 +39,11 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-4">
                                 {% load static %}
-                                <img src="{% static 'img/Tesla Model x.jpg' %}" class="img-responsive" alt="car pic"
-                                     width="100%" height="100%">
+                                <img src="" class="img-responsive" alt="car pic"
+                                     width="100%" height="100%" id="img{{ vehicles.id }}">
+                                <script>
+                                    document.getElementById('img{{ vehicles.id }}').src = 'http://127.0.0.1:8000/' + '{{ vehicles.cover }}';
+                                </script>
                             </div>
                             <div class="col-lg-8 col-md-8">
                                 <p id="ellipsis-ex" class="card-text mb-1"
@@ -65,36 +68,32 @@
                 </div>
 
             </div>
-            <script>
-                {#let btn = document.getElementsByTagName("button");#}
-                {#let id;#}
-                {#document.body.onclick = function(event){#}
-                {#    id = event.target.id;#}
-                {#    console.log(id);#}
-                {##}
-                {#$(".dropdown-item").click(function () {#}
-                {#    let vid=$(this).attr("data-id");#}
-                function move(vid){
-                    console.log(vid);
-                    $.ajax({
-                        type:'post',
-                        url:"/move/",
-                        dataType:'json',
-                        data:{
-                            vid:vid,
-                            csrfmiddlewaretoken:'{{ csrf_token }}'
-                        },
-                        success:function(data){
-                            console.log("success");
-                            window.location.reload("card-body");
-                        },
-                        error:function (data){
-                            console.log("error");
-                        }
-                    })
-                }
-            </script>
+
         {% endfor %}
+        <script>
+            sessionStorage.setItem('email', '{{ email }}');
+            function move(vid){
+                console.log(vid);
+                $.ajax({
+                    type:'post',
+                    url:"/move/",
+                    dataType:'json',
+                    data:{
+                        vid:vid,
+                        csrfmiddlewaretoken:'{{ csrf_token }}'
+                    },
+                    success:function(data){
+                        console.log("success");
+                        window.location.reload("card-body");
+                    },
+                    error:function (data){
+                        console.log("error");
+                    }
+                })
+            }
+
+
+        </script>
     {% else %}
         <div class="container">
             <!-- 404 Error Text -->
@@ -105,6 +104,7 @@
 
         </div>
     {% endif %}
+
 
 {##}
 {#    <h1 class="text-danger">vehicles 少了description，name 属性</h1>#}

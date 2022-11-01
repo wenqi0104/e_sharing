@@ -40,6 +40,7 @@ urlpatterns = [
     path("move/", operator.moveVehicles),
     path("charge/", operator.chargeVehicles),
     path("repair/", operator.repairVehicles),
+    path("getOperator/", operator.getOperator),
     # debugging
     path("vehicles_using/", operator.getUsingVehicles),
     path("vehicles_unusing/", operator.getUnUsingVehicles),
