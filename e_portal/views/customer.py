@@ -115,7 +115,7 @@ def returnVehicle(request, order_id):
 
     # 计算费用并修改订单状态
     use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
-    amount = use_time * vehicle[0].price
+    amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
     # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
     # 修改用户状态
@@ -144,7 +144,7 @@ def report(request, order_id):
 
     # 计算费用并修改订单状态
     use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
-    amount = use_time * vehicle[0].price
+    amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
