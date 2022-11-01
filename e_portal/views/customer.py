@@ -85,9 +85,8 @@ def rent(request, vehicles_id):
 
     msg = "Order created!"
 
-    # redirect(request, '/rents/', {"message": msg})
-    return HttpResponseRedirect(reverse('e_portal:rents', args=(msg,)))
-    # return
+    # return HttpResponseRedirect(reverse('e_portal:rents', args=(msg,)))
+    return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
 def pay(request, order_id):
@@ -160,7 +159,7 @@ def rents(request):
     GET：
     返回两个对象
     先判断eligible,如果为True：
-        1. 目前的正在进行的订单的车辆信息  
+        1. 目前的正在进行的订单的车辆信息
         2. 未支付的所有订单
         3. 修改eligible=False
         ### 第一条和第二条没搞懂是需要返回什么
