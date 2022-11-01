@@ -24,6 +24,7 @@ class Customers(models.Model):
     createDate = models.DateTimeField(default=timezone.now)
     updateDate = models.DateTimeField(auto_now=True)
     eligible = models.BooleanField(default=True)
+    avatar = models.ImageField(upload_to='resources/img/avatars', blank=True)
 
 
 class Operators(models.Model):
@@ -36,12 +37,11 @@ class Operators(models.Model):
     updateDate: 同上
     """
     name = models.CharField(max_length=8)
-    # repairedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
-    # chargedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
     email = models.EmailField(blank=False)
     password = models.CharField(max_length=16)
     createDate = models.DateTimeField(default=timezone.now)
     updateDate = models.DateTimeField(auto_now=True)
+    avatar = models.ImageField(upload_to='resources/img/avatars', blank=True)
 
 
 class Managers(models.Model):
@@ -54,12 +54,11 @@ class Managers(models.Model):
     updateDate: 同上
     """
     name = models.CharField(max_length=8)
-    # repairedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
-    # chargedVehicles = models.ForeignKey('Vehicles', on_delete=models.CASCADE)
     email = models.EmailField(blank=False)
     password = models.CharField(max_length=16)
     createDate = models.DateTimeField(default=timezone.now)
     updateDate = models.DateTimeField(auto_now=True)
+    avatar = models.ImageField(upload_to='resources/img/avatars', blank=True)
 
 
 class Vehicles(models.Model):

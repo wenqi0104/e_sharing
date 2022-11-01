@@ -129,3 +129,13 @@ def getOperator():
     email = requests.Session.get('email')
     data = {"success_msg": "success", "oid": oid, "email": email}
     return JsonResponse(data)
+
+
+def track(request):
+    brokens = models.Vehicles.objects.filter(status="available")
+    low_batterys = models.Vehicles.objects.filter(status="low_battery")
+    availables = models.Vehicles.objects.filter(status="available")
+    usings = models.Vehicles.obkects.filter(status="using")
+
+    return render(request, "/operator/track.html", {"brokens": brokens, "low_batterys": low_batterys,
+                                                    "availables": availables, "usings": usings})

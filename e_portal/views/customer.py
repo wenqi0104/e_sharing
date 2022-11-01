@@ -194,7 +194,7 @@ def rents(request):
     if cur_order:
         cur_vid = cur_order[0].vid
         cur_vehicle = models.Vehicles.objects.get(id=cur_vid)
-        cur_item = RentsItems(cur_order, cur_vehicle)
+        cur_item = RentsItems(cur_order[0], cur_vehicle)
 
         return render(request, 'customers/rents.html', {"cur_item": cur_item, "rents_items": rents_items})
     else:
