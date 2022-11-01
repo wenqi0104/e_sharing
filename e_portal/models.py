@@ -44,7 +44,7 @@ class Operators(models.Model):
     updateDate = models.DateTimeField(auto_now=True)
 
 
-class Manangers(models.Model):
+class Managers(models.Model):
     """
     操作人员表
     name:
@@ -79,18 +79,20 @@ class Vehicles(models.Model):
     """
     name = models.CharField(max_length=128)
     type = models.CharField(max_length=8)
-    cover = models.ImageField(upload_to='covers/', blank=True)
+    cover = models.ImageField(upload_to='resources/img/covers', blank=True)
     color = models.CharField(max_length=8)
-    plateNum = models.IntegerField(default=0)
+    # 车牌号从int修改char类型
+    # plateNum = models.IntegerField(default=0)
+    plateNum = models.CharField(max_length=7)
     batteryPercentage = models.IntegerField(default=100)
     lastChargedTime = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=32)
+    status = models.CharField(max_length=32, default='available')
     totalRentalHours = models.FloatField(default=0)
-    locName = models.CharField(max_length=16)
+    locName = models.CharField(max_length=128)
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
     price = models.FloatField(default=0)
-    description = models.TextField(default="")
+    description = models.TextField(blank=True, null=True)
 
 
 class OperationsHistory(models.Model):
