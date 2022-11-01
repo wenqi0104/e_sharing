@@ -44,8 +44,11 @@ def login(request):
                     request.session['oid'] = i.id  # 设置session值
                     return redirect("operators/vehicles_available/")
         else:
-            all = models.Manangers.objects.all()
-
+            all = models.Managers.objects.all()
+            for i in all:
+                if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
+                    globals.user_id = i.id
+                    return redirect("manager/")
         return render(request, 'pages/login.html')  # 密码/邮箱错误，则重新输入
 
 
