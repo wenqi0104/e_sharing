@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">Payment History</h6>
+            </div>
+            {% if paymentHistory %}
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Payment ID</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Plate Num</th>
+                                    <th>Amount</th>
+                                    <th>Pay At</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Payment ID</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Plate Num</th>
+                                    <th>Amount</th>
+                                    <th>Pay At</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for payment_history in paymentHistory %}
+                                <tr>
+                                    <td>{{ payment_history.id }}</td>
+                                    <td>{{ payment_history.v_type }}</td>
+                                    <td>{{ payment_history.plate_num }}</td>
+                                    <td>{{ payment_history.amount }}</td>
+                                    <td>{{ payment_history.pay_time }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <div class="container">
+                    <div class="text-center">
+                        <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">You do not have any payment history</h2>
+                        <p class="text-warning mb-0">Rent a vehicle?  <a href="{% url 'e_portal:vehicles_list' %}" style="text-decoration: none"> click me</a></p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

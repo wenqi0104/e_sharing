@@ -121,7 +121,7 @@ class Payments(models.Model):
     """
     amount = models.FloatField(blank=False)
     status = models.CharField(max_length=8, default='success')
-    payTime = models.DateTimeField(timezone.now)
+    payTime = models.DateTimeField(default=timezone.now)
     cid = models.IntegerField()
     vid = models.IntegerField()
     detail = models.CharField(max_length=128, default="")

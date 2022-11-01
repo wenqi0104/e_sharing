@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{#    current order#}
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -12,50 +13,88 @@
                             <thead>
                                 <tr>
                                     <th>OrderId</th>
-                                    <th>Vehicle Type</th>
-                                    <th>Vehicle Plate Num</th>
-                                    <th>Price</th>
-                                    <th>Start date</th>
-                                    <th>Status</th>
+                                    <th>Type</th>
+                                    <th>Plate Num</th>
+                                    <th>Price(£/hour)</th>
+                                    <th>Start Time</th>
                                     <th>Operation</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>OrderId</th>
-                                    <th>Vehicle Type</th>
-                                    <th>Vehicle Plate Num</th>
-                                    <th>Price</th>
-                                    <th>Start date</th>
-                                    <th>Status</th>
+                                    <th>Type</th>
+                                    <th>Plate Num</th>
+                                    <th>Price(£/hour)</th>
+                                    <th>Start Time</th>
                                     <th>Operation</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-                            {% for cur_order in cur_order %}
-                                {% for vehicle_details in cur_vehicle %}
-                                    <tr>
-                                        <td>{{ cur_order.id }}</td>
-                                        <td>{{ vehicle_details.type }}</td>
-                                        <td>{{ vehicle_details.plateNum }}</td>
-                                        <td>{{ vehicle_details.price }}</td>
-                                        <td>{{ cur_order.startTime }}</td>
-                                        <td>
-                                            <p class="m-0">{{ cur_order.status }}</p>
-                                            <a class="small m-0" href="{% url 'e_portal:pwd_reset' %}">Make Payment</a>
-                                        </td>
-                                        <td>
-                                            <div class="row">
-                                                <form action="{% url 'e_portal:returnVehicle' cur_order.id %}" method="post">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-sm btn-primary btn-user mx-1">Return</button>
-                                                </form>
-                                                <a href="{% url 'e_portal:report' cur_order.id %}" class="btn btn-sm btn-secondary btn-user mx-1">Report</a>
+                            {% for cur_order in cur_item %}
+                                <tr>
+                                    <td>{{ cur_order.id }}</td>
+                                    <td>{{ cur_order.v_type }}</td>
+                                    <td>{{ cur_order.plate_num }}</td>
+                                    <td>{{ cur_order.price }}</td>
+                                    <td>{{ cur_order.start_time }}</td>
+                                    <td>
+                                        <div class="row">
+                                            <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#returnVehicle{{ unpaid_orders.oid }}">Return</button>
+                                            <button method="post" class="btn btn-sm btn-warning btn-user mx-1" data-toggle="modal" data-target="#makeReport{{ unpaid_orders.oid }}">Report</button>
+                                        </div>
+                                        <!-- Return Vehicle Modal -->
+                                        <div class="modal fade" id="returnVehicle{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="makeReport">Are you sure to return the Vehicle? </h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{% url 'e_portal:returnVehicle' unpaid_orders.oid %}" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="modal-body form-group">
+                                                            <label for="name">Select "Return" below if you are ready to return the vehicle.</label>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                            <button class="btn btn-warning">Return</button></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
+                                        </div>
+                                        <!-- Report Modal -->
+                                        <div class="modal fade" id="makeReport{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="makeReport">Enter your description here: </h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{% url 'e_portal:report' unpaid_orders.oid %}" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="modal-body form-group">
+                                                            <label for="name">Describe what went wrong with the vehicle:  </label>
+                                                            <textarea class="form-control" rows="9"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                            <button class="btn btn-warning">Report</button></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+                                    </td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
@@ -73,7 +112,8 @@
         </div>
     </div>
 
-    {% if unpaid_orders %}
+{#    unpaid order#}
+    {% if rents_items %}
         <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -85,161 +125,174 @@
                             <thead>
                                 <tr>
                                     <th>OrderId</th>
-                                    <th>Vehicle Type</th>
-                                    <th>Vehicle Plate Num</th>
+                                    <th>Type</th>
+                                    <th>Plate Num</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
                                     <th>Price</th>
-                                    <th>Start date</th>
-                                    <th>Status</th>
                                     <th>Operation</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>OrderId</th>
-                                    <th>Vehicle Type</th>
-                                    <th>Vehicle Plate Num</th>
+                                    <th>Type</th>
+                                    <th>Plate Num</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
                                     <th>Price</th>
-                                    <th>Start date</th>
-                                    <th>Status</th>
                                     <th>Operation</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-                            {% for unpaid_orders in unpaid_orders %}
-                                {% for vehicle_details in unpaid_vehicles %}
+                            {% for unpaid_orders in rents_items %}
                                     <tr>
-                                        <td>{{ unpaid_orders.id }}</td>
-                                        <td>{{ vehicle_details.type }}</td>
-                                        <td>{{ vehicle_details.plateNum }}</td>
-                                        <td>{{ vehicle_details.price }}</td>
-                                        <td>{{ unpaid_orders.startTime }}</td>
-                                        <td>
-                                            <p class="m-0">{{ unpaid_orders.status }}</p>
-                                        </td>
+                                        <td>{{ unpaid_orders.oid }}</td>
+                                        <td>{{ unpaid_orders.v_type }}</td>
+                                        <td>{{ unpaid_orders.plate_num }}</td>
+                                        <td>{{ unpaid_orders.start_time }}</td>
+                                        <td>{{ unpaid_orders.end_time }}</td>
+                                        <td>{{ unpaid_orders.amount }}</td>
                                         <td>
                                             <div class="row">
-                                                <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#makePayment">Make Payment</button>
-                                                <button method="post" class="btn btn-sm btn-secondary btn-user mx-1" data-toggle="modal" data-target="#reportModal">Report</button>
+                                                <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#makePayment{{ unpaid_orders.oid }}">Make Payment</button>
+                                                <button method="post" class="btn btn-sm btn-warning btn-user mx-1" data-toggle="modal" data-target="#reportModal{{ unpaid_orders.oid }}">Report</button>
                                             </div>
-                                        </td>
-                                    </tr>
-                                        <!-- Payment Modal-->
-                                        <div class="modal fade" id="makePayment" tabindex="-1" role="dialog" aria-labelledby="pay"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="pay">Select payment method: </h5>
-                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <form action="{% url 'e_portal:report' unpaid_orders.id %}" method="post">
-                                                        {% csrf_token %}
-
-{#                                                        <div class="modal-body col-xl-6 col-md-10 col-lg-12 mb-4">#}
-                                                        <div class="modal-body container-fluid">
-                                                            <div class="row">
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Paypal</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-paypal fa-2x text-primary"></i>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Ali pay</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-alipay fa-2x text-primary"></i>
+                                            <!-- Payment Modal-->
+                                            <div class="modal fade" id="makePayment{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="pay"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="pay">Select payment method: </h5>
+                                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="{% url 'e_portal:payment' unpaid_orders.oid %}" method="post">
+                                                            {% csrf_token %}
+                                                            <div class="modal-body container-fluid">
+                                                                <div class="row">
+                                                                    <div id="hello" class="col-xs-12 col-lg-6 my-1">
+                                                                        <div class="card border-left-primary shadow h-100 py-2">
+                                                                            <div class="card-body">
+                                                                                <div class="row no-gutters align-items-center">
+                                                                                    <div class="col mr-2">
+                                                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                            <div class="form-check">
+                                                                                              <input type="radio" class="form-check-input" id="radio1" name="optradio" value="ali pay" checked>
+                                                                                              <label class="form-check-label" for="radio1">
+                                                                                            Paypal</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
+                                                                                    </div>
+                                                                                    <div class="col-auto">
+                                                                                        <i class="bi bi-paypal fa-2x text-primary"></i>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Wechat Pay</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                                                </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-wechat fa-2x text-success"></i>
+                                                                    <div class="col-xs-12 col-lg-6 my-1">
+                                                                        <div class="card border-left-primary shadow h-100 py-2">
+                                                                            <div class="card-body">
+                                                                                <div class="row no-gutters align-items-center">
+                                                                                    <div class="col mr-2">
+                                                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                            <div class="form-check">
+                                                                                              <input type="radio" class="form-check-input" id="radio2" name="optradio">
+                                                                                              <label class="form-check-label" for="radio2">
+                                                                                            Ali pay</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
+                                                                                    </div>
+                                                                                    <div class="col-auto">
+                                                                                        <i class="bi bi-alipay fa-2x text-primary"></i>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-xs-12 col-lg-6 my-1">
-                                                                    <div class="card border-left-primary shadow h-100 py-2">
-                                                                        <div class="card-body">
-                                                                            <div class="row no-gutters align-items-center">
-                                                                                <div class="col mr-2">
-                                                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                                                        Credit Card</div>
-                                                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                                    <div class="col-xs-12 col-lg-6 my-1">
+                                                                        <div class="card border-left-primary shadow h-100 py-2">
+                                                                            <div class="card-body">
+                                                                                <div class="row no-gutters align-items-center">
+                                                                                    <div class="col mr-2">
+                                                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                            <div class="form-check">
+                                                                                              <input type="radio" class="form-check-input" id="radio3" name="optradio">
+                                                                                              <label class="form-check-label" for="radio3">Wechat Pay</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
+                                                                                    </div>
+                                                                                    <div class="col-auto">
+                                                                                        <i class="bi bi-wechat fa-2x text-success"></i>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div class="col-auto">
-                                                                                    <i class="bi bi-credit-card-fill fa-2x text-info"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-lg-6 my-1">
+                                                                        <div class="card border-left-primary shadow h-100 py-2">
+                                                                            <div class="card-body">
+                                                                                <div class="row no-gutters align-items-center">
+                                                                                    <div class="col mr-2">
+                                                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                                                           <div class="form-check">
+                                                                                              <input type="radio" class="form-check-input" id="radio4" name="optradio">
+                                                                                              <label class="form-check-label" for="radio4">Credit Card</label>
+                                                                                           </div>
+                                                                                        </div>
+                                                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ unpaid_orders.amount }}</div>
+                                                                                    </div>
+                                                                                    <div class="col-auto">
+                                                                                        <i class="bi bi-credit-card-fill fa-2x text-info"></i>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer justify-content-start">
-                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-success">Confirm Payment</button></button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       <!-- Report Modal-->
-                                        <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="makeReport"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="makeReport">Enter your description here: </h5>
-                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
+                                                            <div class="modal-footer justify-content-start">
+                                                                <button type="submit" class="btn btn-success">Confirm Payment</button></button>
+                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                    <form action="{% url 'e_portal:report' unpaid_orders.id %}" method="post">
-                                                        {% csrf_token %}
-                                                        <div class="modal-body form-group">
-                                                            <label for="name">Describe what went wrong with the vehicle:  </label>
-                                                            <textarea class="form-control" rows="9"></textarea>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                            <button class="btn btn-primary">Report</button></button>
-                                                        </div>
-                                                    </form>
                                                 </div>
                                             </div>
-                                        </div>
-                                {% endfor %}
+                                           <!-- Report Modal-->
+                                            <div class="modal fade" id="reportModal{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="makeReport">Enter your description here: </h5>
+                                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="{% url 'e_portal:report' unpaid_orders.oid %}" method="post">
+                                                            {% csrf_token %}
+                                                            <div class="modal-body form-group">
+                                                                <label for="name">Describe what went wrong with the vehicle:  </label>
+                                                                <textarea class="form-control" rows="9"></textarea>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                                <button class="btn btn-warning">Report</button></button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
                             {% endfor %}
                             </tbody>
                         </table>

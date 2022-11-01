@@ -18,9 +18,15 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="{% url 'e_portal:vehicles_list' %}">
+        <a class="nav-link" href="{% url 'e_portal:vehicles_using' %}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Vehicles</span></a>
+            <span>Vehicles in use</span></a>
+        <a class="nav-link" href="{% url 'e_portal:vehicles_available' %}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Vehicles in available</span></a>
+        <a class="nav-link" href="{% url 'e_portal:vehicles_deal' %}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Vehicles in dealing</span></a>
     </li>
 
 

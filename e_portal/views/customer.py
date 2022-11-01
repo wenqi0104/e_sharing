@@ -10,7 +10,7 @@ from django.urls import reverse
 
 
 class RentsItems:
-    oid, v_type, plate_num, start_time, end_time, amount, vid = None, None, None, None, None, None, None
+    oid, v_type, plate_num, start_time, end_time, amount, price, vid = None, None, None, None, None, None, None, None
 
     def __init__(self, order, vehicle):
         self.oid = order.id
@@ -19,7 +19,19 @@ class RentsItems:
         self.start_time = order.startTime
         self.end_time = order.endTime
         self.amount = order.amount
+        self.price = vehicle.price
         self.vid = vehicle.id
+
+
+class PaymentsItems:
+    id, v_type, plate_num, amount, pay_time = None, None, None, None, None
+
+    def __init__(self, payment, vehicle):
+        self.id = payment.id
+        self.v_type = vehicle.type
+        self.plate_num = vehicle.plateNum
+        self.amount = payment.amount
+        self.pay_time = payment.payTime
 
 
 def index(request):
@@ -82,10 +94,10 @@ def pay(request, order_id):
     order.update(status="paid")
 
     # 新建Payments记录
-    models.Payments.objects.create(amount=order.amount, cid=order.cid, vid=order.vid)
+    models.Payments.objects.create(amount=order[0].amount, cid=order[0].cid, vid=order[0].vid)
     # 更新用户totalSpending
-    user = models.Customers.objects.filter(id=order.cid)
-    user.update(totalSpending=user.totalSpending + order.amount)
+    user = models.Customers.objects.filter(id=order[0].cid)
+    user.update(totalSpending=user[0].totalSpending + order[0].amount)
 
     # redirect('customers/rents.html')
     return HttpResponseRedirect(reverse('e_portal:rents'))
@@ -215,3 +227,12 @@ def showMap(request):
     """
     vehicle_all = models.Vehicles.objects.all()
     return render(request, 'pages/index.html', {"vehicle_all": vehicle_all})
+
+
+def getPaymentHistory(request):
+    payments = models.Payments.objects.all()
+    paymentHistory = []
+    for payment in payments:
+        vehicle = models.Vehicles.objects.filter(id=payment.vid)
+        paymentHistory.append(PaymentsItems(payment, vehicle[0]))
+    return render(request, 'customers/payment_history.html', {"paymentHistory": paymentHistory})
