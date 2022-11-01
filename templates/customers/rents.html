@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-{#    current order#}
+    {# current order #}
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Current Rent Info</h6>
             </div>
-            {% if cur_order %}
+            {% if cur_item %}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable">
@@ -40,11 +40,11 @@
                                     <td>{{ cur_order.start_time }}</td>
                                     <td>
                                         <div class="row">
-                                            <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#returnVehicle{{ unpaid_orders.oid }}">Return</button>
-                                            <button method="post" class="btn btn-sm btn-warning btn-user mx-1" data-toggle="modal" data-target="#makeReport{{ unpaid_orders.oid }}">Report</button>
+                                            <button method="post" class="btn btn-sm btn-primary btn-user mx-1" data-toggle="modal" data-target="#returnVehicle{{ cur_order.oid }}">Return</button>
+                                            <button method="post" class="btn btn-sm btn-warning btn-user mx-1" data-toggle="modal" data-target="#makeReport{{ cur_order.oid }}">Report</button>
                                         </div>
                                         <!-- Return Vehicle Modal -->
-                                        <div class="modal fade" id="returnVehicle{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                        <div class="modal fade" id="returnVehicle{{ cur_order.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
                                             aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -54,7 +54,7 @@
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
-                                                    <form action="{% url 'e_portal:returnVehicle' unpaid_orders.oid %}" method="post">
+                                                    <form action="{% url 'e_portal:returnVehicle' cur_order.oid %}" method="post">
                                                         {% csrf_token %}
                                                         <div class="modal-body form-group">
                                                             <label for="name">Select "Return" below if you are ready to return the vehicle.</label>
@@ -68,7 +68,7 @@
                                             </div>
                                         </div>
                                         <!-- Report Modal -->
-                                        <div class="modal fade" id="makeReport{{ unpaid_orders.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
+                                        <div class="modal fade" id="makeReport{{ cur_order.oid }}" tabindex="-1" role="dialog" aria-labelledby="makeReport"
                                             aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -78,7 +78,7 @@
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
-                                                    <form action="{% url 'e_portal:report' unpaid_orders.oid %}" method="post">
+                                                    <form action="{% url 'e_portal:report' cur_order.oid %}" method="post">
                                                         {% csrf_token %}
                                                         <div class="modal-body form-group">
                                                             <label for="name">Describe what went wrong with the vehicle:  </label>
@@ -112,7 +112,7 @@
         </div>
     </div>
 
-{#    unpaid order#}
+    {# unpaid order #}
     {% if rents_items %}
         <div class="container-fluid">
         <div class="card shadow mb-4">
@@ -308,10 +308,5 @@
             </div>
         </div>
     {% endif %}
-
-
-
-
-
 
 {% endblock %}

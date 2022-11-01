@@ -16,16 +16,12 @@ urlpatterns = [
     path("vehicles/", customer.getAvailableVehicles, name='vehicles_list'),
     # 进入details页面执行的
     path("vehicles/<int:vehicles_id>/", customer.getVehicleDetails, name='vehicles_detail'),
-
     # 在details页面执行，rent a car
     path("rent/<int:vehicles_id>/", customer.rent, name='rent'),
-
     # customer pay
     path("pay/<int:order_id>/", customer.pay, name='payment'),
-
     # customer report a broken car
     path("report/<int:order_id>/", customer.report, name='report'),
-
     # return a car
     path("return/<int:order_id>/", customer.returnVehicle, name='returnVehicle'),
     # rental info page
@@ -40,11 +36,14 @@ urlpatterns = [
     path("move/", operator.moveVehicles),
     path("charge/", operator.chargeVehicles),
     path("repair/", operator.repairVehicles),
+    path("getOperator/", operator.getOperator),
+    path("track/", operator.track),
     # debugging
     path("vehicles_using/", operator.getUsingVehicles),
     path("vehicles_unusing/", operator.getUnUsingVehicles),
     path("vehicles_move/", operator.moveVehicles),
-    path("vehicles_deal/", operator.getDealVehicles)
-    # manager
+    path("vehicles_deal/", operator.getDealVehicles),
 
+    # manager
+    path("manager/", manager.graphPage)
 ]

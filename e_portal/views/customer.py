@@ -159,7 +159,7 @@ def rents(request):
     GET：
     返回两个对象
     先判断eligible,如果为True：
-        1. 目前的正在进行的订单的车辆信息  
+        1. 目前的正在进行的订单的车辆信息
         2. 未支付的所有订单
         3. 修改eligible=False
         ### 第一条和第二条没搞懂是需要返回什么
@@ -194,7 +194,7 @@ def rents(request):
     if cur_order:
         cur_vid = cur_order[0].vid
         cur_vehicle = models.Vehicles.objects.get(id=cur_vid)
-        cur_item = RentsItems(cur_order, cur_vehicle)
+        cur_item = RentsItems(cur_order[0], cur_vehicle)
 
         return render(request, 'customers/rents.html', {"cur_item": cur_item, "rents_items": rents_items})
     else:
