@@ -85,9 +85,8 @@ def rent(request, vehicles_id):
 
     msg = "Order created!"
 
-    # redirect(request, '/rents/', {"message": msg})
-    return HttpResponseRedirect(reverse('e_portal:rents', args=(msg,)))
-    # return
+    # return HttpResponseRedirect(reverse('e_portal:rents', args=(msg,)))
+    return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
 def pay(request, order_id):

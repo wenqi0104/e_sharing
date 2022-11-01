@@ -7,8 +7,8 @@ import random
 import time
 
 import geocoder
-from geocoder import arcgis
-from django.core import serializers
+# from geocoder import arcgis
+# from django.core import serializers
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .. import models
