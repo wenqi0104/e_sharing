@@ -42,6 +42,7 @@ def login(request):
                 if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
                     globals.user_id = i.id
                     request.session['oid'] = i.id  # 设置session值
+                    request.session['email'] = i.email
                     return redirect("operators/vehicles_available/")
         else:
             all = models.Managers.objects.all()

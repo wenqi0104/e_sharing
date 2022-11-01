@@ -9,6 +9,7 @@ import time
 import geocoder
 # from geocoder import arcgis
 # from django.core import serializers
+import requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .. import models
@@ -29,8 +30,8 @@ def generate_random_gps(base_log=55.85806, base_lat=-4.25889, radius=100000):
     longitude = y + base_log
     latitude = x + base_lat
     locName = geocoder.arcgis([longitude, latitude], method='reverse').address
-    longitude = '%.2f' % longitude
-    latitude = '%.2f' % latitude
+    longitude = '%.10f' % longitude
+    latitude = '%.10f' % latitude
 
     return longitude, latitude, locName
     # data = {"longitude": longitude, "latitude": latitude, "locName": locName}
@@ -63,9 +64,10 @@ def getUsingVehicles(request):
     """
     if request.method == "GET":
         data = models.Vehicles.objects.filter(status="using").all()
+        email = request.session.get('email')
         # data = serializers.serialize('json', data)
         # return HttpResponse(data, content_type="application/json")
-        return render(request, "operator/vehicles_using.html", {"vehicles_using": data})
+        return render(request, "operator/vehicles_using.html", {"vehicles_using": data, "email": email})
 
 
 def getUnUsingVehicles(request):
@@ -78,7 +80,8 @@ def getUnUsingVehicles(request):
         data = models.Vehicles.objects.filter(status="available").all()
         # data = serializers.serialize('json', data)
         # return HttpResponse(data, content_type="application/json")
-        return render(request, "operator/vehicles_available.html", {"vehicles_available": data})
+        email = request.session.get('email')
+        return render(request, "operator/vehicles_available.html", {"vehicles_available": data, "email": email})
 
 
 def getDealVehicles(request):
@@ -119,3 +122,10 @@ def repairVehicles(request):
                                             repairedTime=time.strftime('%Y-%m-%d %H:%M:%S'))
         data = {"success_msg": "success"}
         return JsonResponse(data)
+
+
+def getOperator():
+    oid = requests.Session.get('oid')
+    email = requests.Session.get('email')
+    data = {"success_msg": "success", "oid": oid, "email": email}
+    return JsonResponse(data)
