@@ -13,6 +13,7 @@ class RentsItems:
     oid, v_type, plate_num, start_time, end_time, amount, price, vid = None, None, None, None, None, None, None, None
 
     def __init__(self, order, vehicle):
+        # self.id = order.id
         self.oid = order.id
         self.v_type = vehicle.type
         self.plate_num = vehicle.plateNum
@@ -186,6 +187,8 @@ def rents(request):
     # oid, v_type, plate_num, start_time, end_time, amount, vid
     rents_items = list()
     for i in range(len(unpaid_orders)):
+        if unpaid_orders[i].endTime is None:
+            continue
         order = unpaid_orders[i]
         vehicle = unpaid_vehicles[i]
         item = RentsItems(order, vehicle)
