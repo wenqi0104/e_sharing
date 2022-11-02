@@ -57,8 +57,7 @@ def graphPage(request):
         for x in month_payment:
             sum_month_payment += x.amount
         month_payment_list.append(sum_month_payment)
-    return render(request, "", {"bike_amount": bike_amount, "scooter_amount": scooter_amount,
-                                "car_amount": car_amount, "using_amount": using_amount,
+    return render(request, "managers/graph.html", {"type_list": type_list, "using_amount": using_amount,
                                 "available_amount": available_amount, "sum_payment": sum_payment,
                                 "month_payment": month_payment_list})
     
@@ -70,4 +69,4 @@ def tablePage(request):
     :return:
     """
     vehicles_information = models.Vehicles.objects.all()
-    return render(request, "", {"vehicles_information": vehicles_information})
+    return render(request, "managers/table.html", {"vehicles_information": vehicles_information})
