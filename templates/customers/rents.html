@@ -20,19 +20,19 @@
                                     <th>Operation</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>OrderId</th>
-                                    <th>Type</th>
-                                    <th>Plate Num</th>
-                                    <th>Price(£/hour)</th>
-                                    <th>Start Time</th>
-                                    <th>Operation</th>
-                                </tr>
-                            </tfoot>
+<!--                            <tfoot>-->
+<!--                                <tr>-->
+<!--                                    <th>OrderId</th>-->
+<!--                                    <th>Type</th>-->
+<!--                                    <th>Plate Num</th>-->
+<!--                                    <th>Price(£/hour)</th>-->
+<!--                                    <th>Start Time</th>-->
+<!--                                    <th>Operation</th>-->
+<!--                                </tr>-->
+<!--                            </tfoot>-->
                             <tbody>
                                 <tr>
-                                    <td>{{ cur_item.id }}</td>
+                                    <td>{{ cur_item.oid }}</td>
                                     <td>{{ cur_item.v_type }}</td>
                                     <td>{{ cur_item.plate_num }}</td>
                                     <td>{{ cur_item.price }}</td>
@@ -131,17 +131,17 @@
                                     <th>Operation</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>OrderId</th>
-                                    <th>Type</th>
-                                    <th>Plate Num</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Price</th>
-                                    <th>Operation</th>
-                                </tr>
-                            </tfoot>
+<!--                            <tfoot>-->
+<!--                                <tr>-->
+<!--                                    <th>OrderId</th>-->
+<!--                                    <th>Type</th>-->
+<!--                                    <th>Plate Num</th>-->
+<!--                                    <th>Start Time</th>-->
+<!--                                    <th>End Time</th>-->
+<!--                                    <th>Price</th>-->
+<!--                                    <th>Operation</th>-->
+<!--                                </tr>-->
+<!--                            </tfoot>-->
                             <tbody>
                             {% for unpaid_orders in rents_items %}
                                     <tr>
