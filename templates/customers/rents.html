@@ -9,7 +9,7 @@
             {% if cur_item %}
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>OrderId</th>
@@ -20,16 +20,6 @@
                                     <th>Operation</th>
                                 </tr>
                             </thead>
-<!--                            <tfoot>-->
-<!--                                <tr>-->
-<!--                                    <th>OrderId</th>-->
-<!--                                    <th>Type</th>-->
-<!--                                    <th>Plate Num</th>-->
-<!--                                    <th>Price(£/hour)</th>-->
-<!--                                    <th>Start Time</th>-->
-<!--                                    <th>Operation</th>-->
-<!--                                </tr>-->
-<!--                            </tfoot>-->
                             <tbody>
                                 <tr>
                                     <td>{{ cur_item.oid }}</td>
@@ -131,17 +121,17 @@
                                     <th>Operation</th>
                                 </tr>
                             </thead>
-<!--                            <tfoot>-->
-<!--                                <tr>-->
-<!--                                    <th>OrderId</th>-->
-<!--                                    <th>Type</th>-->
-<!--                                    <th>Plate Num</th>-->
-<!--                                    <th>Start Time</th>-->
-<!--                                    <th>End Time</th>-->
-<!--                                    <th>Price</th>-->
-<!--                                    <th>Operation</th>-->
-<!--                                </tr>-->
-<!--                            </tfoot>-->
+                            <tfoot>
+                                <tr>
+                                   <th>OrderId</th>
+                                   <th>Type</th>
+                                   <th>Plate Num</th>
+                                   <th>Start Time</th>
+                                   <th>End Time</th>
+                                   <th>Price</th>
+                                   <th>Operation</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
                             {% for unpaid_orders in rents_items %}
                                     <tr>
