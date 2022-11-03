@@ -2,6 +2,7 @@
 设计登录功能的所有接口
 由于登录界面三种用户都是一样的，所以单独列出来views
 """
+import json
 
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
@@ -43,6 +44,8 @@ def login(request):
                     globals.user_id = i.id
                     request.session['oid'] = i.id  # 设置session值
                     request.session['email'] = i.email
+                    request.session['username'] = i.name
+                    request.session['avatar'] = json.dumps(str(i.avatar))
                     return redirect("operators/vehicles_available/")
         else:
             all = models.Managers.objects.all()

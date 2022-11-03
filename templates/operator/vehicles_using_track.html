@@ -1,0 +1,20 @@
+{% extends 'base_operator.html' %}
+{% block content %}
+    {% if vehicles_using %}
+        {% for vehicles in vehicles_using %}
+            
+        {% endfor %}
+    {% else %}
+        <div class="container">
+            <!-- 404 Error Text -->
+            <div class="text-center">
+                <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">No vehicles using</h2>
+                <p class="text-gray-500 mb-0">We will add using for you Asap...</p>
+            </div>
+
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}
