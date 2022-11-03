@@ -1,0 +1,130 @@
+{% extends 'base_operator.html' %}
+{% block content %}
+    {% if vehicles_deal %}
+        {% for vehicles in vehicles_deal %}
+            <div class="col-lg-6 col-md-12">
+
+                <!-- Dropdown Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row justify-content-between">
+                        {#                    <h6 class="m-0 font-weight-bold text-dark">{{ vheicles.name}}</h6>#}
+                        <h6 class="m-0 font-weight-bold text-success">Plate Number: <b>{{ vehicles.plateNum }}</b></h6>
+                        <h6 class="m-0 font-weight-bold text-warning"><b>{{ vehicles.type }}</b></h6>
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                 aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">More Actions</div>
+                                <!-- 这里的detail，results就是在urls.py 中的path（）注册的name属性值。也就是说，在path()中写出了name，之后跳转时就使用name的属性值就行了 -->
+                                <!-- 带id用链接跳转的方法就是这个 -->
+                                <a class="dropdown-item"
+                                   href="{% url 'e_portal:vehicles_detail' vehicles.id %}">Detail</a>
+                                <div class="dropdown-divider"></div>
+                                {% if vehicles.status == "low_battery" %}
+                                    <button class="dropdown-item" type="button" data-vid="{{ vehicles.id }}" onclick="charge({{ vehicles.id }})">Charge</button>
+                                {% endif %}
+                                {% if vehicles.status == "broken" %}
+                                     <button class="dropdown-item" type="button" data-vid="{{ vehicles.id }}" onclick="repair({{ vehicles.id }}, '{{ vehicles.locName }}')">Repair</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4">
+                                {% load static %}
+                                <img src="" class="img-responsive" alt="car pic"
+                                     width="100%" height="100%" id="img{{ vehicles.id }}">
+                                <script>
+                                    document.getElementById('img{{ vehicles.id }}').src = 'http://127.0.0.1:8000/' + '{{ vehicles.cover }}';
+                                </script>
+                            </div>
+                            <div class="col-lg-8 col-md-8">
+                                <p id="ellipsis-ex" class="card-text mb-1"
+                                   style="display: -webkit-box;display: -moz-box;white-space: pre-wrap;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical; -webkit-line-clamp:2;">{{ vehicles.description }}</p>
+                                <p class="text-dark">
+                                    Color: &nbsp
+                                    <b class="text-body">{{ vehicles.color }}</b>
+                                    &nbsp &nbsp &nbsp
+                                    Status: &nbsp
+                                    <b class="text-success">{{ vehicles.status }}</b>
+                                </p>
+                                <p class="text-dark">
+                                    Battery: &nbsp
+                                    <b class="text-body">{{ vehicles.batteryPercentage }}</b>
+                                    &nbsp &nbsp &nbsp
+                                    LocName: &nbsp
+                                    <b class="text-success">{{ vehicles.locName }}</b>
+                                </p>
+                                <p class="text-dark">Price: &nbsp<b class="text-success">£ {{ vehicles.price }} per
+                                    hour</b></p>
+                                <p class="text-dark">Longitude: &nbsp
+                                    <b class="text-success">{{ vehicles.longitude }}</b> &nbsp &nbsp
+                                    Latitude: &nbsp
+                                    <b class="text-success">{{ vehicles.latitude }}</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        {% endfor %}
+        <script>
+                function charge(vid){
+                    $.ajax({
+                        type:'post',
+                        url:"/charge/",
+                        dataType:'json',
+                        data:{
+                            vid:vid,
+                            csrfmiddlewaretoken:'{{ csrf_token }}'
+                        },
+                        success:function(data){
+                            console.log("success");
+                            window.location.reload("card-body");
+                        },
+                        error:function (data){
+                            console.log("error");
+                        }
+                    })
+                }
+                function repair(vid, locName){
+                    $.ajax({
+                        type:'post',
+                        url:"/repair/",
+                        dataType:'json',
+                        data:{
+                            vid:vid,
+                            locName:locName,
+                            csrfmiddlewaretoken:'{{ csrf_token }}'
+                        },
+                        success:function(data){
+                            console.log("success");
+                            window.location.reload("card-body");
+                        },
+                        error:function (data){
+                            console.log("error");
+                        }
+                    })
+                }
+            </script>
+    {% else %}
+        <div class="container">
+            <!-- 404 Error Text -->
+            <div class="text-center">
+                <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">No vehicles Available</h2>
+                <p class="text-gray-500 mb-0">We will add available for you Asap...</p>
+            </div>
+
+        </div>
+    {% endif %}
+
+
+{% endblock %}
