@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'e_portal:vehicles_available' %}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
@@ -13,31 +13,57 @@
     <hr class="sidebar-divider my-0">
 
     <div class="sidebar-heading">
-        Vehicles Information
+        Available Vehicles List
     </div>
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="{% url 'e_portal:vehicles_using' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Vehicles in use</span></a>
         <a class="nav-link" href="{% url 'e_portal:vehicles_available' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Vehicles in available</span></a>
-        <a class="nav-link" href="{% url 'e_portal:vehicles_deal' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Vehicles in dealing</span></a>
-        <a class="nav-link" href="{% url 'e_portal:using_track' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Using vehicles track</span></a>
-        <a class="nav-link" href="{% url 'e_portal:available_track' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Available vehicles track</span></a>
-        <a class="nav-link" href="{% url 'e_portal:deal_track' %}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dealing vehicles track</span></a>
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Available Vehicles</span></a>
     </li>
 
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <div class="sidebar-heading">
+        Unavailable Vehicles List
+    </div>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'e_portal:vehicles_using' %}">
+        <i class="fas bi-funnel-fill fa-tachometer-alt"></i>
+        <span>Occupied Vehicles</span></a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'e_portal:vehicles_deal' %}">
+        <i class="fas bi-gear-fill fa-tachometer-alt"></i>
+        <span>Operations in Need</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <div class="sidebar-heading">
+        Track Vehicles
+    </div>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'e_portal:using_track' %}">
+        <i class="fas bi-compass-fill fa-tachometer-alt"></i>
+        <span>Available Vehicles</span></a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'e_portal:using_track' %}">
+        <i class="fas bi-geo-alt-fill fa-tachometer-alt"></i>
+        <span>Occupied Vehicles</span></a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'e_portal:deal_track' %}">
+        <i class="fas bi-pin-map-fill fa-tachometer-alt"></i>
+        <span>Pending Vehicles</span></a>
+    </li>
 
 
 
@@ -69,18 +95,18 @@
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="tables.html" data-toggle="modal" data-target="#logoutModal">
-            <i class="fas fa-sign-out-alt text-gray-300"></i>
-            <span>Log Out</span></a>
+        <i class="fas fa-sign-out-alt text-gray-300"></i>
+        <span>Log Out</span></a>
     </li>
 
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="ModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -90,13 +116,13 @@
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="{% url 'e_portal:login' %}">Logout</a>
                 </div>
-            </div>
+            </div>s
         </div>
     </div>
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-    <!-- Sidebar Toggler (Sidebar) -->
+    <!-- Sidebar Toggle (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>

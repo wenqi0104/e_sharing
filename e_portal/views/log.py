@@ -36,6 +36,7 @@ def login(request):
                 if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
                     globals.user_id = i.id
                     request.session['username'] = i.name
+                    request.session['avatar'] = json.dumps(str(i.avatar))
                     return redirect("/vehicles")
         elif type == "operator":
             all = models.Operators.objects.all()

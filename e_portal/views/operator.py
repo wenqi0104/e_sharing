@@ -19,7 +19,7 @@ from .. import models
 # base_log：经度基准点，
 # base_lat：维度基准点，
 # radius：距离基准点的半径
-def generate_random_gps(base_log=55.85806, base_lat=-4.25889, radius=100000):
+def generate_random_gps(base_log=-4.25889, base_lat=55.85806, radius=3000):
     radius_in_degrees = radius / 111300
     u = float(random.uniform(0.0, 1.0))
     v = float(random.uniform(0.0, 1.0))
@@ -29,7 +29,7 @@ def generate_random_gps(base_log=55.85806, base_lat=-4.25889, radius=100000):
     y = w * math.sin(t)
     longitude = y + base_log
     latitude = x + base_lat
-    locName = geocoder.arcgis([longitude, latitude], method='reverse').address
+    locName = geocoder.arcgis([latitude, longitude], method='reverse').address
     longitude = '%.10f' % longitude
     latitude = '%.10f' % latitude
 
@@ -161,3 +161,16 @@ def track(request):
 
     return render(request, "/operator/track.html", {"brokens": brokens, "low_batterys": low_batterys,
                                                     "availables": availables, "usings": usings})
+
+
+def getVehicleDetails(request, vehicles_id):
+    """
+    根据前端返回的id，查找特定id的vehicle的信息
+    返回这个车的所有信息
+    path('/vehicle/vehicle_details/', ... )
+    :param vid:
+    :param request:
+    :return:
+    """
+    details = models.Vehicles.objects.get(id=vehicles_id)
+    return render(request, "operator/vehicle_detail.html", {"details": details})
