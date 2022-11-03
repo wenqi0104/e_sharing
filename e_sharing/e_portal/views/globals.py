@@ -1,2 +1,0 @@
-
-global user_id
