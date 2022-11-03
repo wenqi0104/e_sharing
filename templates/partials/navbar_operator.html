@@ -52,14 +52,14 @@
     <div class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="email"></span>
+            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="email">{{ request.session.username }}</span>
             <script>
                 {#console.log(sessionStorage.getItem('email'));#}
-                document.getElementById("email").innerHTML = sessionStorage.getItem('email');
+                {#document.getElementById("email").innerHTML = sessionStorage.getItem('email');#}
             </script>
             {% load static %}
             <img class="img-profile rounded-circle"
-                src="{% static 'img/saber.jpg' %}">
+                src="http://127.0.0.1:8000/{{ request.session.avatar|cut:'"' }}">
         </a>
         <!-- Dropdown - User Information -->
 {#            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"#}

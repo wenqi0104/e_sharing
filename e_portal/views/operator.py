@@ -92,9 +92,31 @@ def getDealVehicles(request):
     """
     if request.method == "GET":
         data_available = models.Vehicles.objects.filter(status="available").all()
+        data_using = models.Vehicles.objects.filter(status="using").all()
         data_ex = models.Vehicles.objects.all()
-        vehicles_deal = list(set(data_ex) - set(data_available))
+        vehicles_deal = list(set(data_ex) - set(data_available) - set(data_using))
         return render(request, "operator/vehicles_deal.html", {"vehicles_deal": vehicles_deal})
+
+
+def usingTrack(request):
+    if request.method == "GET":
+        data = models.Vehicles.objects.filter(status="using").all()
+        return render(request, "operator/vehicles_using_track.html", {"vehicles_using": data})
+
+
+def availableTrack(request):
+    if request.method == "GET":
+        data_available = models.Vehicles.objects.filter(status="available").all()
+        data_using = models.Vehicles.objects.filter(status="using").all()
+        data_ex = models.Vehicles.objects.all()
+        vehicles_available = list(set(data_ex) - set(data_available) - set(data_using))
+        return render(request, "operator/vehicles_available_track.html", {"vehicles_available": vehicles_available})
+
+
+def dealTrack(request):
+    if request.method == "GET":
+        data = models.Vehicles.objects.filter(status="using").all()
+        return render(request, "operator/vehicles_deal_track.html", {"vehicles_deal": data})
 
 
 def chargeVehicles(request):
