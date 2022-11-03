@@ -1,10 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>E-vehicle sharing</title>
+
+    {% load static %}
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %} " rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{#    <link rel="stylesheet" href="../../resources/vendor/leaflet/leaflet.css"/>#}
+{#    <script src="../../resources/vendor/leaflet/leaflet.js"></script>#}
+    <link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %} "/>
+    <script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+    <!-- bootstrap icon库 & button 样式库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="//brick.a.ssl.fastly.net/Roboto:400"/>
+
+
+    <style>
+        .verticalDivider{
+            padding:12px 6px 0px 6px;
+            margin-left: 6px;
+            border-left: 2px solid #dedede;
+            font-size: 0;
+        }
+
+    </style>
 </head>
-<body>
-$END$
+<body id="page-top">
+    <div id="wrapper">
+        <!-- insert Sidebar -->
+        {% include 'partials/sidebar_operator.html' %}
+        <!-- Content Wrapper -->
+        <!-- 这就是基础骨架，所有的content内容都是这插入在这里 -->
+        <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+            <div id="content">
+                <!-- insert Navbar -->
+                <!-- Navbar -->
+                {% include 'partials/navbar_operator.html' %}
+                <!-- End of Navbar -->
+            <!-- details of the vehicle -->
+{#            <div style="display: flex;">#}
+            <div style="padding-right: 38px">
+                <div style="position: relative; width: 100%; height: 650px; margin: 20px 0 20px 20px; box-shadow: 0px 7px 7px #c8c8c8;">
+
+                    <div style="position: absolute; top:0; right:0;z-index: 99; width: 300px;height: 200px;" >
+                        {% load static %}
+                        <img src="" alt="car pic"
+                             width=100% height=100% style="border-radius: 10px 10px 0 0px;  opacity: 0.95;" id="img{{ details.id }}">
+                        <script>
+                            document.getElementById('img{{ details.id }}').src = 'http://127.0.0.1:8000/' + '{{ details.cover }}';
+                        </script>
+                        <div class="bg-gray-400 p-2" style="border-radius: 0px 0px 10px 10px;box-shadow: 0px 5px 5px #c8c8c8">
+                            <p class="mb-2 text-gray-800">{{ details.description }}</p>
+                        </div>
+                    </div>
+
+
+{#                    底部卡片#}
+                    <div class="card border-bottom-primary" style="position: absolute; top: 70%; left: 100px; z-index: 99;opacity:0.85;box-shadow: 0px 9px 9px gray;">
+                        <div class="card-body row">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                          <label class="form-check-label" for="radio3">Status</label>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.status }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-card-text fa-2x text-gradient-info"></i>
+                                </div>
+                            </div>
+{#                            分割线#}
+                            <span class="verticalDivider"></span>
+
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                          <label class="form-check-label" for="radio3">Price Per Hour</label>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ details.price }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-tags-fill fa-2x text-success"></i>
+                                </div>
+                            </div>
+                            {#                            分割线#}
+                            <span class="verticalDivider"></span>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                          <label class="form-check-label" for="radio3">Plate Number</label>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.plateNum }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-car-front-fill fa-2x text-info"></i>
+                                </div>
+                            </div>
+                            {#                            分割线#}
+                            <span class="verticalDivider"></span>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                          <label class="form-check-label" for="radio3">Surplus electricity</label>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.batteryPercentage }} % </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-battery-half fa-2x text-success"></i>
+                                </div>
+                            </div>
+                            {#                            分割线#}
+                            <span class="verticalDivider"></span>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                          <label class="form-check-label" for="radio3">Total Rental Hours</label>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.totalRentalHours }} hours</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-hourglass-split fa-2x text-warning"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+{#                    map#}
+                    <div id="operatorMap"  style="position: absolute; z-index: 0; width: 100%; height: 100%;  box-shadow: 0px 7px 7px #c8c8c8; border-radius: 10px"></div>
+                    <div style="position: absolute; top:50%; right: 100px;box-shadow: 0px 7px 7px #c8c8c8; opacity: 0.9" >
+                      <button method="post" href="#" class="btn btn-success btn-icon-split" data-toggle="modal" data-target="#Move{{ details.id }}">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-check"></i>
+                            </span>
+                          <span class="text">Move Vehicle</span>
+                      </button>
+                    </div>
+                    <!-- Move Vehicle Modal-->
+                    <div class="modal fade" id="Move{{ details.id }}" tabindex="-1" role="dialog" aria-labelledby="order"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="order">Are you sure you have moved the vehicle? </h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                    <div class="modal-body form-group">Select "Confirm Movement" below if you are ready to commit your operation.</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                        <button class="btn btn-success" type="button" data-vid="{{ vehicles.id }}" onclick="move({{ details.id }})">Move</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; e-sharing 2022</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+    </div>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %} "></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+
 </body>
+<!-- Map Operation -->
+<script>
+    {#var startPoint = [55.858, -4.259]#}
+    var startPoint = [{{ details.latitude }}, {{ details.longitude }}]
+    var myMap = L.map('operatorMap').setView(startPoint, 16);
+    var markPoint = [{{ details.latitude }}, {{ details.longitude }}]
+    // add a scala to the map
+    var scale = L.control.scale({maxWidth:200,metric:true,imperial:false}).addTo(myMap);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18
+    }).addTo(myMap);
+
+    L.marker(markPoint).addTo(myMap)
+    .bindPopup('<strong>Current Location:</strong> {{ details.locName }}<br><strong>Status:</strong> {{ details.status }} <br><strong>Vehicle Type:</strong>{{ details.type }}<br><strong>Color:</strong> {{ details.color }}')
+    .openPopup();
+
+    {#move vehicle operation#}
+    function move(vid){
+        console.log(vid);
+        $.ajax({
+            type:'post',
+            url:"/move/",
+            dataType:'json',
+            data:{
+                vid:vid,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+            success:function(data){
+                console.log("success");
+                window.location.reload();
+            },
+            error:function (data){
+                console.log("error");
+            }
+        })
+    }
+
+</script>
 </html>

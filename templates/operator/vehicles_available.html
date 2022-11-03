@@ -23,7 +23,7 @@
                                 <!-- 带id用链接跳转的方法就是这个 -->
 
                                 <a class="dropdown-item"
-                                   href="{% url 'e_portal:vehicles_detail' vehicles.id %}">Detail</a>
+                                   href="{% url 'e_portal:operator_vehicle_detail' vehicles.id %}">Detail</a>
                                 <button class="dropdown-item" type="button" data-vid="{{ vehicles.id }}" onclick="move({{ vehicles.id }})">Move</button>
 
                             </div>
@@ -62,7 +62,6 @@
 
         {% endfor %}
         <script>
-            sessionStorage.setItem('email', '{{ email }}');
             function move(vid){
                 console.log(vid);
                 $.ajax({
@@ -82,15 +81,15 @@
                     }
                 })
             }
-
-
         </script>
     {% else %}
         <div class="container">
             <!-- 404 Error Text -->
             <div class="text-center">
                 <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">No vehicles Available</h2>
-                <p class="text-gray-500 mb-0">We will add available for you Asap...</p>
+                <p class="text-gray-500 mb-0">Plz handle the Unavailable vehicles asap...
+                    <a href="{% url 'e_portal:vehicles_deal' %}" style="text-decoration: none"> click me to the operation lists</a>
+                </p>
             </div>
 
         </div>
