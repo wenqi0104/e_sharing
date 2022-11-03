@@ -49,5 +49,6 @@ urlpatterns = [
     path("vehicles_deal/", operator.getDealVehicles),
 
     # manager
-    path("manager/", manager.graphPage)
+    path("managers/", manager.graphPage),
+    path("managers/", manager.tablePage)
 ]

@@ -53,7 +53,7 @@ def login(request):
             for i in all:
                 if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
                     globals.user_id = i.id
-                    return redirect("manager/")
+                    return redirect("managers/")
         return render(request, 'pages/login.html')  # 密码/邮箱错误，则重新输入
 
 
