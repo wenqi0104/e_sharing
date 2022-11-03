@@ -18,20 +18,6 @@
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="../../resources/vendor/leaflet/leaflet.css"/>
     <script src="../../resources/vendor/leaflet/leaflet.js"></script>
-    <!-- bootstrap icon库 & button 样式库 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="//brick.a.ssl.fastly.net/Roboto:400"/>
-
-
-    <style>
-        .verticalDivider{
-            padding:12px 6px 0px 6px;
-            margin-left: 6px;
-            border-left: 2px solid #dedede;
-            font-size: 0;
-        }
-
-    </style>
 </head>
 <body id="page-top">
     <div id="wrapper">
@@ -47,171 +33,49 @@
                 {% include 'partials/navbar.html' %}
                 <!-- End of Navbar -->
             <!-- details of the vehicle -->
-{#            <div style="display: flex;">#}
-            <div style="padding-right: 38px">
-                <div style="position: relative; width: 100%; height: 650px; margin: 20px 0 20px 20px; box-shadow: 0px 7px 7px #c8c8c8;">
-                    <!-- information card -->
-{#                    <div style="position: absolute; z-index: 99; width: 500px;height: 300px" >#}
-{#                        <!-- Dropdown Card Example -->#}
-{#                        <div class="card shadow mb-4" >#}
-{#                            <!-- Card Body -->#}
-{#                            <div class="card-body">#}
-{#                                <div class="row">#}
-{#                                    <div class="col-lg-6 col-md-6">#}
-{#                                        {% load static %}#}
-{#                                        <img src="" class="img-responsive" alt="car pic"#}
-{#                                             width=100% height=100% style="border-radius: 10px; box-shadow: 0px 5px 5px #c8c8c8" id="img{{ details.id }}">#}
-{#                                        <script>#}
-{#                                            document.getElementById('img{{ details.id }}').src = 'http://127.0.0.1:8000/' + '{{ details.cover }}';#}
-{#                                        </script>#}
-{#                                    </div>#}
-{#                                    <div class="col-lg-6 col-md-6">#}
-{#                                        <p class="text-dark">Type: &nbsp<b class="text-body">{{ details.type }}</b></p>#}
-{#                                        <p class="text-dark">Color: &nbsp<b class="text-body">{{ details.color }}</b></p>#}
-{#                                        <p class="text-dark">Battery: &nbsp<b#}
-{#                                                class="text-body">{{ details.batteryPercentage }}</b></p>#}
-{#                                        <p class="text-dark">Current Location: &nbsp<b#}
-{#                                                class="text-body">{{ details.locName }}</b></p>#}
-{#                                        <p class="text-dark">Price: &nbsp<b class="text-success">£ {{ details.price }} per#}
-{#                                            hour</b></p>#}
-{#                                        <p id="ellipsis-ex" class="card-text mb-1"#}
-{#                                       style="display: -webkit-box;display: -moz-box;white-space: pre-wrap;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical; -webkit-line-clamp:2;">Detailed information:{{ details.description }}</p>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-
-
-
-
-
-
-                    <div style="position: absolute; top:0; right:0;z-index: 99; width: 300px;height: 200px;" >
-                        {% load static %}
-                        <img src="" alt="car pic"
-                             width=100% height=100% style="border-radius: 10px 10px 0 0px;  opacity: 0.95;" id="img{{ details.id }}">
-                        <script>
-                            document.getElementById('img{{ details.id }}').src = 'http://127.0.0.1:8000/' + '{{ details.cover }}';
-                        </script>
-                        <div class="bg-gray-400 p-2" style="border-radius: 0px 0px 10px 10px;box-shadow: 0px 5px 5px #c8c8c8">
-                            <p class="mb-2 text-gray-800">{{ details.description }}</p>
+            <div style="display: flex; height: 700px">
+                <!-- information card -->
+                <div class="col-lg-6 col-md-12" style="width: 40%">
+                    <!-- Dropdown Card Example -->
+                    <div class="card shadow mb-4" style="width: 100%">
+                        <!-- Card Body -->
+                        <div class="card-body" style="width: 100%">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    {% load static %}
+                                    <img src="{% static 'img/Tesla Model x.jpg' %}" class="img-responsive" alt="car pic"
+                                         width="100%" >
+                                </div>
+                                <div class="col-lg-8 col-md-8">
+                                    <p class="text-dark">Type: &nbsp<b class="text-body">{{ details.type }}</b></p>
+                                    <p class="text-dark">Color: &nbsp<b class="text-body">{{ details.color }}</b></p>
+                                    <p class="text-dark">Battery: &nbsp<b
+                                            class="text-body">{{ details.batteryPercentage }}</b></p>
+                                    <p class="text-dark">Current Location: &nbsp<b
+                                            class="text-body">{{ details.locName }}</b></p>
+                                    <p class="text-dark">Price: &nbsp<b class="text-success">£ {{ details.price }} per
+                                        hour</b></p>
+                                    <p id="ellipsis-ex" class="card-text mb-1"
+                                   style="display: -webkit-box;display: -moz-box;white-space: pre-wrap;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical; -webkit-line-clamp:2;">Detailed information:{{ details.description }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-
-
-
-{#                    底部卡片#}
-                    <div class="card border-bottom-primary" style="position: absolute; top: 70%; left: 100px; z-index: 99;opacity:0.85;box-shadow: 0px 9px 9px gray;">
-                        <div class="card-body row">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                          <label class="form-check-label" for="radio3">Vehicle Model</label>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.name }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="bi bi-card-text fa-2x text-gradient-info"></i>
-                                </div>
-                            </div>
-{#                            分割线#}
-                            <span class="verticalDivider"></span>
-
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                          <label class="form-check-label" for="radio3">Price Per Hour</label>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">£ {{ details.price }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="bi bi-tags-fill fa-2x text-success"></i>
-                                </div>
-                            </div>
-                            {#                            分割线#}
-                            <span class="verticalDivider"></span>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                          <label class="form-check-label" for="radio3">Plate Number</label>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.plateNum }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="bi bi-car-front-fill fa-2x text-info"></i>
-                                </div>
-                            </div>
-                            {#                            分割线#}
-                            <span class="verticalDivider"></span>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                          <label class="form-check-label" for="radio3">Surplus electricity</label>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.batteryPercentage }} % </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="bi bi-battery-half fa-2x text-success"></i>
-                                </div>
-                            </div>
-                            {#                            分割线#}
-                            <span class="verticalDivider"></span>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                          <label class="form-check-label" for="radio3">Current Location</label>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ details.locName }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="bi bi-pin-map-fill fa-2x text-warning"></i>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-{#                    map#}
-                    <div id="mapid"  style="position: absolute; z-index: 0; width: 100%; height: 100%;  box-shadow: 0px 7px 7px #c8c8c8; border-radius: 10px"></div>
-{#                    <a href="#" class="btn btn-success btn-icon-split" style="position: absolute; right: 100px;top:75%"  >#}
-{#                        <span class="icon text-white-50">#}
-{#                            <i class="fas fa-check"></i>#}
-{#                        </span>#}
-{#                        <span class="text">Rent</span>#}
-{#                    </a>#}
-                    <div style="position: absolute; top:75%; right: 100px;box-shadow: 0px 7px 7px #c8c8c8; opacity: 0.9" >
-                      <button method="post" href="#" class="btn btn-success btn-icon-split" data-toggle="modal" data-target="#Order{{ details.id }}">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-check"></i>
-                            </span>
-                          <span class="text">Rent Now</span>
-                      </button>
-                    </div>
-                    <!-- Report Modal-->
-                    <div class="modal fade" id="Order{{ details.id }}" tabindex="-1" role="dialog" aria-labelledby="order"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="order">Are you sure to rent this vehicle? </h5>
-                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <form action="{% url 'e_portal:rent' details.id %}" method="post">
-                                    {% csrf_token %}
-                                    <div class="modal-body form-group">Select "Rent" below if you are ready to rent the vehicle.</div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                        <button class="btn btn-success">Rent</button></button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                <div id="mapid" style="width: 60%"></div>
             </div>
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading 作为管理员时再显示-->
+{#                    {% include 'partials/page_heading.html' %}#}
+
+                    <!-- Content Row -->
+                    <div class="row">
+                        {% block content %}{% endblock %}
+                    </div>
+
+                </div>
 
                 <!-- /.container-fluid -->
             </div>
@@ -262,9 +126,8 @@
 </body>
 <!-- Map Operation -->
 <script>
-    {#var startPoint = [55.858, -4.259]#}
-    var startPoint = [{{ details.latitude }}, {{ details.longitude }}]
-    var myMap = L.map('mapid').setView(startPoint, 16);
+    var startPoint = [55.858, -4.259]
+    var myMap = L.map('mapid').setView(startPoint, 13);
     var markPoint = [{{ details.latitude }}, {{ details.longitude }}]
     // add a scala to the map
     var scale = L.control.scale({maxWidth:200,metric:true,imperial:false}).addTo(myMap);
@@ -275,8 +138,6 @@
     L.marker(markPoint).addTo(myMap)
     .bindPopup('Status: {{ details.status }}.<br> Current Location: {{ details.locName }}.<br> Description: {{ details.description }}')
     .openPopup();
-
-
 
 </script>
 </html>
