@@ -29,10 +29,10 @@
 
     <!-- Navbar Navbar -->
 {#    <ul class="navbar-nav">#}
-        {% if error_message %}
+        {% if request.session.error_message %}
             <div class=" alert alert-danger alert-dismissible mt-3 mr-auto fade show">
              <a href="#" class="close" data-dismiss="alert">&times;</a>
-             <strong>{{ error_message }}</strong>
+             <strong>{{ request.session.error_message }}</strong>
             </div>
         {%  endif %}
 

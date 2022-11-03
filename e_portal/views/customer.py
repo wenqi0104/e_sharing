@@ -74,8 +74,13 @@ def rent(request, vehicles_id):
     user = models.Customers.objects.get(id=uid)
 
     if not user.eligible:
-        return HttpResponseRedirect(reverse('e_portal:rents'),
-                                    {"error_message": "you can not order more than one car at a time!"})
+        error_message = "you can not rent more than one car at a time!"
+        request.session['error_message'] = error_message
+        request.session.set_expiry(1)
+        return redirect('/rents/')
+        # return render(request, "customers/vehicles_list.html", {'error_message': error_msg})
+        # return HttpResponseRedirect(reverse('e_portal:rents'),
+        #                             {"error_message": "you can not rent more than one car at a time!"})
 
     # 创建一个新的订单
     models.Order.objects.create(cid=uid, vid=vehicles_id)
