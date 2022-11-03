@@ -13,6 +13,7 @@ class RentsItems:
     oid, v_type, plate_num, start_time, end_time, amount, price, vid = None, None, None, None, None, None, None, None
 
     def __init__(self, order, vehicle):
+        # self.id = order.id
         self.oid = order.id
         self.v_type = vehicle.type
         self.plate_num = vehicle.plateNum
@@ -73,8 +74,13 @@ def rent(request, vehicles_id):
     user = models.Customers.objects.get(id=uid)
 
     if not user.eligible:
-        return HttpResponseRedirect(reverse('e_portal:rents'),
-                                    {"error_message": "you can not order more than one car at a time!"})
+        error_message = "you can not rent more than one car at a time!"
+        request.session['error_message'] = error_message
+        request.session.set_expiry(1)
+        return redirect('/rents/')
+        # return render(request, "customers/vehicles_list.html", {'error_message': error_msg})
+        # return HttpResponseRedirect(reverse('e_portal:rents'),
+        #                             {"error_message": "you can not rent more than one car at a time!"})
 
     # 创建一个新的订单
     models.Order.objects.create(cid=uid, vid=vehicles_id)
@@ -115,7 +121,7 @@ def returnVehicle(request, order_id):
 
     # 计算费用并修改订单状态
     use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
-    amount = use_time * vehicle[0].price
+    amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
     # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
     # 修改用户状态
@@ -144,7 +150,7 @@ def report(request, order_id):
 
     # 计算费用并修改订单状态
     use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
-    amount = use_time * vehicle[0].price
+    amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
@@ -186,6 +192,8 @@ def rents(request):
     # oid, v_type, plate_num, start_time, end_time, amount, vid
     rents_items = list()
     for i in range(len(unpaid_orders)):
+        if unpaid_orders[i].endTime is None:
+            continue
         order = unpaid_orders[i]
         vehicle = unpaid_vehicles[i]
         item = RentsItems(order, vehicle)

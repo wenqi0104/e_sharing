@@ -9,7 +9,8 @@ from .. import models
 from . import globals
 import django.utils.timezone as timezone
 
-#返回主页
+
+# 返回主页
 def index(request):
     if request.method == "GET":
         return render(request, 'pages/index.html')
@@ -19,10 +20,8 @@ def index(request):
 
 # 登录界面
 def login(request):
-    # add database, only run once
-    # models.Order.objects.create(amount="5", status="paid", cid=10, vid=1)
-    # models.Order.objects.create(amount=12, cid=8, vid=2)
     globals.user_id = None
+    request.session.flush()
     if request.method == "GET":
         return render(request, 'pages/login.html')
     else:  # POST
@@ -35,6 +34,7 @@ def login(request):
             for i in all:
                 if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
                     globals.user_id = i.id
+                    request.session['username'] = i.name
                     return redirect("/vehicles")
         elif type == "operator":
             all = models.Operators.objects.all()
@@ -53,8 +53,7 @@ def login(request):
         return render(request, 'pages/login.html')  # 密码/邮箱错误，则重新输入
 
 
-
-#注册界面
+# 注册界面
 def register(request):
     if request.method == "GET":
         return render(request, 'pages/register.html')
@@ -68,14 +67,15 @@ def register(request):
         models.Customers.objects.create(name=name, email=email, password=pwd)
         return redirect("/vehicles")
 
-#重置密码
+
+# 重置密码
 def pwd_reset(request):
     if request.method == "GET":
         return render(request, 'pages/pwd_reset.html')
     # else:
 
 
-#error404动态
+# error404动态
 def Error404(request):
     if request.method == "GET":
         all_customers = models.Customers.objects.all()
