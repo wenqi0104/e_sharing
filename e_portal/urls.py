@@ -27,7 +27,7 @@ urlpatterns = [
     # rental info page
     path("rents/", customer.rents, name='rents'),
     # payment history
-    path("history/",customer.getPaymentHistory, name='paymentHistory'),
+    path("history/", customer.getPaymentHistory, name='paymentHistory'),
 
     # operator
     path("operators/vehicles_using/", operator.getUsingVehicles, name='vehicles_using'),
