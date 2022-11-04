@@ -52,6 +52,9 @@ def getAvailableVehicles(request):
     """
     vehicles_available = models.Vehicles.objects.filter(status="available")
 
+    if request.session.get('error_message') is not None:
+        del request.session['error_message']
+
     return render(request, "customers/vehicles_list.html", {"vehicles_available": vehicles_available})
 
 
@@ -76,8 +79,7 @@ def rent(request, vehicles_id):
     if not user.eligible:
         error_message = "you can not rent more than one car at a time!"
         request.session['error_message'] = error_message
-        request.session.set_expiry(1)
-        return redirect('/rents/')
+        return HttpResponseRedirect(reverse('e_portal:rents'))
 
     # 创建一个新的订单
     models.Order.objects.create(cid=uid, vid=vehicles_id)
@@ -124,14 +126,15 @@ def returnVehicle(request, order_id):
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态
-    vehicle.update(batteryPercentage=vehicle[0].batteryPercentage - use_time * 10,
+    temp_battery = vehicle[0].batteryPercentage - use_time * 10
+    new_battery = 0 if temp_battery < 0 else temp_battery
+    vehicle.update(batteryPercentage=new_battery,
                    totalRentalHours=vehicle[0].totalRentalHours + use_time)
     if vehicle[0].batteryPercentage <= 20:
         vehicle.update(status="low_battery")
     else:
         vehicle.update(status="available")
 
-    # redirect(request, '/rents/')
     return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
@@ -240,4 +243,8 @@ def getPaymentHistory(request):
     for payment in payments:
         vehicle = models.Vehicles.objects.filter(id=payment.vid)
         paymentHistory.append(PaymentsItems(payment, vehicle[0]))
+
+    if request.session.get('error_message') is not None:
+        del request.session['error_message']
+
     return render(request, 'customers/payment_history.html', {"paymentHistory": paymentHistory})
