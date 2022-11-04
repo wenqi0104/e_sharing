@@ -4,11 +4,10 @@ Chart.defaults.global.defaultFontColor = '#858796';
 
 // Pie Chart Example
 var ctx = document.getElementById("myPieChart");
-var pieChartData = ctx.innerHTML
+var pieChartData = ctx.innerHTML.slice(1,-1).split(",")
 var myPieChart = new Chart(ctx, {
   type: 'doughnut',
   data: {
-    // bug label0,label2 can't be shown
     labels: ["Bike", "Scooter", "Car"],
     datasets: [{
       data: pieChartData,
