@@ -126,14 +126,14 @@ def returnVehicle(request, order_id):
     vehicle = models.Vehicles.objects.filter(id=order[0].vid)
 
     # 计算费用并修改订单状态
-    use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
+    use_time = round((end_time - order[0].startTime).seconds / 3600, 2) + 0.5  # 使用时间，起步价半小时
     amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
     # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态
-    temp_battery = vehicle[0].batteryPercentage - use_time * 10
+    temp_battery = round(vehicle[0].batteryPercentage - use_time * 10, 2)
     new_battery = 0 if temp_battery < 0 else temp_battery
     vehicle.update(batteryPercentage=new_battery,
                    totalRentalHours=vehicle[0].totalRentalHours + use_time)
@@ -156,13 +156,13 @@ def report(request, order_id):
     vehicle = models.Vehicles.objects.filter(id=order[0].vid)
 
     # 计算费用并修改订单状态
-    use_time = (end_time - order[0].startTime).seconds / 3600 + 1  # 使用时间
+    use_time = round((end_time - order[0].startTime).seconds / 3600, 2) + 0.5  # 使用时间，起步价半小时
     amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态为broken
-    temp_battery = vehicle[0].batteryPercentage - use_time * 10
+    temp_battery = round(vehicle[0].batteryPercentage - use_time * 10, 2)
     new_battery = 0 if temp_battery < 0 else temp_battery
     vehicle.update(status="broken", batteryPercentage=new_battery,
                    totalRentalHours=vehicle[0].totalRentalHours + use_time)
