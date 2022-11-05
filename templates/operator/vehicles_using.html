@@ -40,8 +40,8 @@
                                 <td>{{ vehicles.plateNum }}</td>
                                 <td>{{ vehicles.locName }}</td>
 {#                                这里可能得涉及order里的内容#}
-                                <td>用户名要在这里</td>
-                                <td><a class="btn btn-info" href="{% url 'e_portal:operator_vehicle_detail' vehicles.id %}">Detail</a></td>
+                                <td>{{ vehicles.name_customer }}</td>
+                                <td><a class="btn btn-info" href="{% url 'e_portal:operator_vehicle_detail' vehicles.vid %}">Detail</a></td>
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -1,12 +1,14 @@
 {% extends 'base_operator.html' %}
+
 {% block content %}
+
 <div class="container-fluid">
 {#    ！！！！！！！！！！！！！！！！！！！！！！！！！需要charge的#}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-warning">Vehicles Need Recharge</h6>
         </div>
-    {% if vehicles_deal %}
+    {% if vehicles_low_battery %}
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable">
@@ -33,7 +35,7 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    {% for vehicles in vehicles_deal %}
+                    {% for vehicles in vehicles_low_battery %}
                         <tr>
                             <td>{{ vehicles.id }}</td>
                             <td>{{ vehicles.type }}</td>
@@ -42,7 +44,7 @@
                             <td>{{ vehicles.locName }}</td>
                             <td class="text-danger">{{ vehicles.batteryPercentage }} %</td>
                             <td><a class="btn btn-info" href="{% url 'e_portal:operator_vehicle_detail' vehicles.id %}">Detail</a>
-                                <button method="post" class="btn btn-primary" data-toggle="modal" data-target="#charge{{ vehicles.id }}">Charge</button>
+                                <button method="post" class="btn btn-warning" data-toggle="modal" data-target="#charge{{ vehicles.id }}">Charge</button>
                                 <!-- Charge Modal -->
                                 <div class="modal fade" id="charge{{ vehicles.id }}" tabindex="-1" role="dialog" aria-labelledby="charge"
                                     aria-hidden="true">
@@ -109,6 +111,24 @@
                         }
                     })
                 }
+                function chargeBroken(vid){
+                    $.ajax({
+                        type:'post',
+                        url:"/chargeBroken/",
+                        dataType:'json',
+                        data:{
+                            vid:vid,
+                            csrfmiddlewaretoken:'{{ csrf_token }}'
+                        },
+                        success:function(data){
+                            console.log("success");
+                            window.location.reload("card-body");
+                        },
+                        error:function (data){
+                            console.log("error");
+                        }
+                    })
+                }
             </script>
     {% else %}
         <div class="container">
@@ -125,10 +145,10 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-danger">Broken Vehicles</h6>
         </div>
-    {% if vehicles_deal %}
+    {% if vehicles_broken %}
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable">
+                <table class="table table-bordered" id="dataTable2">
                     <thead>
                         <tr>
                             <th>Vehicle Id</th>
@@ -152,7 +172,7 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    {% for vehicles in vehicles_deal %}
+                    {% for vehicles in vehicles_broken %}
                         <tr>
                             <td>{{ vehicles.id }}</td>
                             <td>{{ vehicles.type }}</td>
@@ -161,54 +181,59 @@
                             <td>{{ vehicles.locName }}</td>
                             <td>{{ vehicles.batteryPercentage }} %</td>
                             <td><a class="btn btn-info" href="{% url 'e_portal:operator_vehicle_detail' vehicles.id %}">Detail</a>
-                                <a class="btn btn-primary">Charge</a>
-                                <a class="btn btn-warning">Go Through Report</a>
+                                <button method="post" class="btn btn-primary" data-toggle="modal" data-target="#repair{{ vehicles.id }}">Fix</button>
+                                <!-- repair Modal -->
+                                <div class="modal fade" id="repair{{ vehicles.id }}" tabindex="-1" role="dialog" aria-labelledby="repair"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="charge">Are you sure the car is repaired? </h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                                <div class="modal-body form-group">
+                                                    <label for="name">Select "Confirm" below to commit your operation.</label>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                    <button class="btn btn-warning" type="button" data-vid="{{ vehicles.id }}" onclick="repair({{ vehicles.id }}, '{{ vehicles.locName }}')">Confirm</button>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button method="post" class="btn btn-warning" data-toggle="modal" data-target="#charge_two{{ vehicles.id }}">Charge</button>
+                                <!-- report Modal -->
+                                <div class="modal fade" id="charge_two{{ vehicles.id }}" tabindex="-1" role="dialog" aria-labelledby="charge_two"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="charge">Are you sure the battery is fully charged? </h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                                <div class="modal-body form-group">
+                                                    <label for="name">Select "Confirm" below to commit your operation.</label>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                    <button class="btn btn-warning" type="button" data-vid="{{ vehicles.id }}" onclick="chargeBroken({{ vehicles.id }})">Confirm</button>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
+
                     </tbody>
                 </table>
             </div>
         </div>
-        <script>
-                function charge(vid){
-                    $.ajax({
-                        type:'post',
-                        url:"/charge/",
-                        dataType:'json',
-                        data:{
-                            vid:vid,
-                            csrfmiddlewaretoken:'{{ csrf_token }}'
-                        },
-                        success:function(data){
-                            console.log("success");
-                            window.location.reload("card-body");
-                        },
-                        error:function (data){
-                            console.log("error");
-                        }
-                    })
-                }
-                function repair(vid, locName){
-                    $.ajax({
-                        type:'post',
-                        url:"/repair/",
-                        dataType:'json',
-                        data:{
-                            vid:vid,
-                            locName:locName,
-                            csrfmiddlewaretoken:'{{ csrf_token }}'
-                        },
-                        success:function(data){
-                            console.log("success");
-                            window.location.reload("card-body");
-                        },
-                        error:function (data){
-                            console.log("error");
-                        }
-                    })
-                }
-            </script>
+
     {% else %}
         <div class="container">
             <!-- 404 Error Text -->
