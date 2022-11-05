@@ -15,6 +15,36 @@ from django.http import HttpResponse, JsonResponse
 from .. import models
 
 
+class usingItem:
+    vid, name, type, cover, color, plateNum, batteryPercentage, lastChargedTime, status, totalRentalHours, locName, latitude, longitude, price, description, oid, amount, status_order, startTime, endTime, cid, address, name_customer, avatar = None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
+
+    def __init__(self, vehicles, order, customer):
+        self.vid = vehicles.id
+        self.name = vehicles.name
+        self.type = vehicles.type
+        self.cover = vehicles.cover
+        self.color = vehicles.color
+        self.plateNum = vehicles.plateNum
+        self.batteryPercentage = vehicles.batteryPercentage
+        self.lastChargedTime = vehicles.lastChargedTime
+        self.status = vehicles.status
+        self.totalRentalHours = vehicles.totalRentalHours
+        self.locName = vehicles.locName
+        self.latitude = vehicles.latitude
+        self.longitude = vehicles.longitude
+        self.price = vehicles.price
+        self.description = vehicles.description
+        self.oid = order.id
+        self.amount = order.amount
+        self.status_order = order.status
+        self.startTime = order.startTime
+        self.endTime = order.endTime
+        self.cid = order.cid
+        self.address = customer.address
+        self.name_customer = customer.name
+        self.avatar = customer.avatar
+
+
 # Create your views here.
 # base_log：经度基准点，
 # base_lat：维度基准点，
@@ -65,9 +95,12 @@ def getUsingVehicles(request):
     if request.method == "GET":
         data = models.Vehicles.objects.filter(status="using").all()
         email = request.session.get('email')
-        # data = serializers.serialize('json', data)
-        # return HttpResponse(data, content_type="application/json")
-        return render(request, "operator/vehicles_using.html", {"vehicles_using": data, "email": email})
+        vehicles_using = []
+        for vehicles in data:
+            order = models.Order.objects.get(vid=vehicles.id, endTime=None)
+            user = models.Customers.objects.get(id=order.cid)
+            vehicles_using.append(usingItem(vehicles, order, user))
+        return render(request, "operator/vehicles_using.html", {"vehicles_using": vehicles_using, "email": email})
 
 
 def getUnUsingVehicles(request):
@@ -91,25 +124,26 @@ def getDealVehicles(request):
     :return:
     """
     if request.method == "GET":
-        data_available = models.Vehicles.objects.filter(status="available").all()
-        data_using = models.Vehicles.objects.filter(status="using").all()
-        data_ex = models.Vehicles.objects.all()
-        vehicles_deal = list(set(data_ex) - set(data_available) - set(data_using))
-        return render(request, "operator/vehicles_deal.html", {"vehicles_deal": vehicles_deal})
+        data_low_battery = models.Vehicles.objects.filter(status="low_battery").all()
+        data_broken = models.Vehicles.objects.filter(status="broken").all()
+        # data_ex = models.Vehicles.objects.all()
+        # vehicles_deal = list(set(data_ex) - set(data_available) - set(data_using))
+        return render(request, "operator/vehicles_deal.html", {"vehicles_low_battery": data_low_battery, "vehicles_broken": data_broken})
 
 
 def usingTrack(request):
     if request.method == "GET":
         data = models.Vehicles.objects.filter(status="using").all()
-        return render(request, "operator/vehicles_using_track.html", {"vehicles_using": data})
+        return render(request, "operator/vehicles_using_track.html",
+                      {"vehicles_using": data})
 
 
 def availableTrack(request):
     if request.method == "GET":
-        data_lb = models.Vehicles.objects.filter(status="low_battery").all()
-        data_broken = models.Vehicles.objects.filter(status="broken").all()
+        data_available = models.Vehicles.objects.filter(status="available").all()
+        data_using = models.Vehicles.objects.filter(status="using").all()
         data_ex = models.Vehicles.objects.all()
-        vehicles_available = list(set(data_ex) - set(data_lb) - set(data_broken))
+        vehicles_available = list(set(data_ex) - set(data_available) - set(data_using))
         return render(request, "operator/vehicles_available_track.html", {"vehicles_available": vehicles_available})
 
 
@@ -125,6 +159,18 @@ def chargeVehicles(request):
         vid = request.POST.get("vid")
         oid = request.session.get('oid')
         models.Vehicles.objects.filter(id=vid).update(status="available", batteryPercentage=100)
+        models.OperationsHistory.objects.create(operationType=apply_type, oid=oid, vid=vid,
+                                                operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
+        data = {"success_msg": "success"}
+        return JsonResponse(data)
+
+
+def chargeBrokenVehicles(request):
+    if request.method == "POST":
+        apply_type = "charge"
+        vid = request.POST.get("vid")
+        oid = request.session.get('oid')
+        models.Vehicles.objects.filter(id=vid).update(batteryPercentage=100)
         models.OperationsHistory.objects.create(operationType=apply_type, oid=oid, vid=vid,
                                                 operateTime=time.strftime('%Y-%m-%d %H:%M:%S'))
         data = {"success_msg": "success"}
@@ -157,7 +203,7 @@ def track(request):
     brokens = models.Vehicles.objects.filter(status="available")
     low_batterys = models.Vehicles.objects.filter(status="low_battery")
     availables = models.Vehicles.objects.filter(status="available")
-    usings = models.Vehicles.obkects.filter(status="using")
+    usings = models.Vehicles.objects.filter(status="using")
 
     return render(request, "/operator/track.html", {"brokens": brokens, "low_batterys": low_batterys,
                                                     "availables": availables, "usings": usings})

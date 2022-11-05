@@ -39,6 +39,7 @@ urlpatterns = [
     path("operators/track/deal/", operator.dealTrack, name='deal_track'),
     path("move/", operator.moveVehicles, name='move_vehicle'),
     path("charge/", operator.chargeVehicles, name='charge_vehicle'),
+    path("chargeBroken/", operator.chargeBrokenVehicles, name='charge_broken'),
     path("repair/", operator.repairVehicles, name='repair_vehicle'),
     path("getOperator/", operator.getOperator, name='operators_list'),
     path("track/", operator.track, name='track_vehicles'),
