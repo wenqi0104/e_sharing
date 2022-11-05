@@ -55,6 +55,12 @@ def getAvailableVehicles(request):
     if request.session.get('error_message') is not None:
         del request.session['error_message']
 
+    if request.session.get('rent_success') is not None:
+        del request.session['rent_success']
+
+    if request.session.get('pay_success') is not None:
+        del request.session['pay_success']
+
     return render(request, "customers/vehicles_list.html", {"vehicles_available": vehicles_available})
 
 
@@ -88,9 +94,9 @@ def rent(request, vehicles_id):
     models.Customers.objects.filter(id=uid).update(eligible=False)
     models.Vehicles.objects.filter(id=vehicles_id).update(status="using")
 
-    msg = "Order created!"
+    rent_success = "Rent successfully!"
+    request.session['rent_success'] = rent_success
 
-    # return HttpResponseRedirect(reverse('e_portal:rents', args=(msg,)))
     return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
@@ -103,8 +109,9 @@ def pay(request, order_id):
     # 更新用户totalSpending
     user = models.Customers.objects.filter(id=order[0].cid)
     user.update(totalSpending=user[0].totalSpending + order[0].amount)
+    pay_success = 'Pay successfully!'
+    request.session['pay_success'] = pay_success
 
-    # redirect('customers/rents.html')
     return HttpResponseRedirect(reverse('e_portal:rents'))
 
 
@@ -249,5 +256,11 @@ def getPaymentHistory(request):
 
     if request.session.get('error_message') is not None:
         del request.session['error_message']
+
+    if request.session.get('rent_success') is not None:
+        del request.session['rent_success']
+
+    if request.session.get('pay_success') is not None:
+        del request.session['pay_success']
 
     return render(request, 'customers/payment_history.html', {"paymentHistory": paymentHistory})
