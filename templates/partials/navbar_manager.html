@@ -1,0 +1,47 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand navbar-light bg-white topbar justify-content-end mb-4 static-top shadow ">
+
+    <!-- Sidebar Toggle (Navbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+
+
+
+    <!-- Navbar Navbar -->
+{#    <ul class="navbar-nav">#}
+        {% if error_message %}
+            <div class=" alert alert-danger alert-dismissible mt-3 mr-auto fade show">
+             <a href="#" class="close" data-dismiss="alert">&times;</a>
+             <strong>{{ error_message }}</strong>
+            </div>
+        {%  endif %}
+
+        {% if message %}
+            <div class=" alert alert-success alert-dismissible mt-3 mr-auto fade show">
+             <a href="#" class="close" data-dismiss="alert">&times;</a>
+             <strong>{{ message }}</strong>
+            </div>
+        {%  endif %}
+
+<div class="row justify-content-end">
+    <div class="nav-item">
+        <p class="text-success text-uppercase" style="margin-top: 22px; font-weight: bold">Manager</p>
+    </div>
+    <div class="topbar-divider d-none d-sm-block"></div>
+    <!-- Nav Item - User Information -->
+    <div class="nav-item dropdown no-arrow">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="mr-2 d-none d-lg-inline text-gray-600" id="email">{{ request.session.username }}</span>
+            <script>
+            </script>
+            <img class="img-profile rounded-circle"
+                src="http://127.0.0.1:8000/{{ request.session.avatar|cut:'"' }}">
+        </a>
+    </div>
+</div>
+
+
+</nav>
+<!-- End of Navbar -->

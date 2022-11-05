@@ -140,16 +140,19 @@ def usingTrack(request):
 
 def availableTrack(request):
     if request.method == "GET":
-        data_available = models.Vehicles.objects.filter(status="available").all()
-        data_using = models.Vehicles.objects.filter(status="using").all()
+        data_lb = models.Vehicles.objects.filter(status="low_battery").all()
+        data_broken = models.Vehicles.objects.filter(status="broken").all()
         data_ex = models.Vehicles.objects.all()
-        vehicles_available = list(set(data_ex) - set(data_available) - set(data_using))
+        vehicles_available = list(set(data_ex) - set(data_lb) - set(data_broken))
         return render(request, "operator/vehicles_available_track.html", {"vehicles_available": vehicles_available})
 
 
 def dealTrack(request):
     if request.method == "GET":
-        data = models.Vehicles.objects.filter(status="using").all()
+        data_available = models.Vehicles.objects.filter(status="available").all()
+        data_using = models.Vehicles.objects.filter(status="using").all()
+        data_ex = models.Vehicles.objects.all()
+        data = list(set(data_ex) - set(data_available) - set(data_using))
         return render(request, "operator/vehicles_deal_track.html", {"vehicles_deal": data})
 
 
