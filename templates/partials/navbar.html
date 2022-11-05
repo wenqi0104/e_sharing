@@ -15,10 +15,17 @@
             </div>
         {%  endif %}
 
-        {% if message %}
+        {% if request.session.pay_success %}
             <div class=" alert alert-success alert-dismissible mt-3 mr-auto fade show">
              <a href="#" class="close" data-dismiss="alert">&times;</a>
-             <strong>{{ message }}</strong>
+             <strong>{{ request.session.pay_success }}</strong>
+            </div>
+        {%  endif %}
+
+        {% if request.session.rent_success %}
+            <div class=" alert alert-success alert-dismissible mt-3 mr-auto fade show">
+             <a href="#" class="close" data-dismiss="alert">&times;</a>
+             <strong>{{ request.session.rent_success }}</strong>
             </div>
         {%  endif %}
 
