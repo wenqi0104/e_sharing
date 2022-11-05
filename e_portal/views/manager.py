@@ -15,6 +15,8 @@ def graphPage(request):
     返回正在使用和可使用车的数量
     返回总盈利额
     返回每个月的盈利额
+    返回customer总数
+    返回所有车行驶总时长
     :param request:
     :return:
     """
@@ -59,9 +61,23 @@ def graphPage(request):
         for x in month_payment:
             sum_month_payment += x.amount
         month_payment_list.append(sum_month_payment)
+
+    # 返回customer总数
+    customer = models.Customers.objects.all()
+    amount_customer = 0
+    for i in customer:
+        amount_customer += 1
+
+    # 返回所有车行驶总时长
+    vehicle = models.Vehicles.objects.all()
+    amount_time = 0
+    for i in vehicle:
+        amount_time += i.totalRentalHours
+
     return render(request, "managers/graph.html", {"type_list": type_list, "using_amount": using_amount,
-                                                  "available_amount": available_amount, "sum_payment": sum_payment,
-                                                  "month_payment": month_payment_list})
+                                                   "available_amount": available_amount, "sum_payment": sum_payment,
+                                                   "month_payment": month_payment_list, "amount_customer": amount_customer,
+                                                   "amount_time": amount_time})
 
 
 def tablePage(request):
