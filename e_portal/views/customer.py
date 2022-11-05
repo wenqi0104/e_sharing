@@ -155,7 +155,10 @@ def report(request, order_id):
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态为broken
-    vehicle.update(status="broken")
+    temp_battery = vehicle[0].batteryPercentage - use_time * 10
+    new_battery = 0 if temp_battery < 0 else temp_battery
+    vehicle.update(status="broken", batteryPercentage=new_battery,
+                   totalRentalHours=vehicle[0].totalRentalHours + use_time)
 
     return HttpResponseRedirect(reverse('e_portal:rents'))
 
@@ -218,13 +221,13 @@ def rents(request):
 #     """
 
 
-def consumeBattery(request):
-    """
-    电量改变
-    :param request:
-    :return:
-    """
-    return 0
+# def consumeBattery(request):
+#     """
+#     电量改变
+#     :param request:
+#     :return:
+#     """
+#     return 0
 
 
 def showMap(request):
