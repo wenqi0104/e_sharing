@@ -5,8 +5,13 @@
 
     {% if vehicles_deal %}
          <!-- Main Content -->
-        <div id="content">
-            <div id="mapid" style="height: 700px"></div>
+        <div id="content" style="position: relative">
+            <div style="position: absolute; top:0; right:0;z-index: 99; width: 270px;height: 200px;" >
+                <div class="bg-gray-400 p-2" style="border-radius: 0 10px 0 10px;">
+                    <p class="mb-2 text-gray-800">List all the low battery & broken vehicles, more information plz click detailed page.</p>
+                </div>
+            </div>
+            <div id="mapid" class="operatorMap"></div>
         </div>
         <script>
             var startPoint = [55.858, -4.259]
@@ -19,7 +24,6 @@
 
         </script>
         {% for vehicles in vehicles_deal %}
-
             <script>
             L.marker([{{ vehicles.latitude }}, {{ vehicles.longitude }}]).addTo(myMap)
                 .bindPopup('<strong>Status:</strong> {{ vehicles.status }} <br><strong>Vehicle Type:</strong>{{ vehicles.type }}<br><strong>Current Location:</strong> {{ vehicles.locName }}<br><strong>Info:</strong><a href="{% url 'e_portal:operator_vehicle_detail' vehicles.id %}">Detailed information </a>')
@@ -30,8 +34,7 @@
         <div class="container">
             <!-- 404 Error Text -->
             <div class="text-center">
-                <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">No vehicles available</h2>
-                <p class="text-gray-500 mb-0">We will add available for you Asap...</p>
+                <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">Great! Everything works well for now.</h2>
             </div>
 
         </div>
