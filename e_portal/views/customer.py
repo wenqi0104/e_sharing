@@ -119,7 +119,6 @@ def returnVehicle(request, order_id):
     uid = globals.user_id
     # 把endtime转为datetime形式
     end_time = timezone.now()
-    # end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S.%f")
 
     # 拿到order和vehicle信息
     order = models.Order.objects.filter(id=order_id)
@@ -129,7 +128,6 @@ def returnVehicle(request, order_id):
     use_time = round((end_time - order[0].startTime).seconds / 3600, 2) + 0.5  # 使用时间，起步价半小时
     amount = round(use_time * vehicle[0].price, 2)
     order.update(amount=amount, endTime=end_time)
-    # unpaid_order = models.Order.objects.filter(cid=uid, status="unpaid")
     # 修改用户状态
     models.Customers.objects.filter(id=uid).update(eligible=True)
     # 修改车辆状态
@@ -248,11 +246,12 @@ def showMap(request):
 
 
 def getPaymentHistory(request):
-    payments = models.Payments.objects.all()
-    paymentHistory = []
+    uid = globals.user_id
+    payments = models.Payments.objects.filter(cid=uid)
+    payment_history = []
     for payment in payments:
         vehicle = models.Vehicles.objects.filter(id=payment.vid)
-        paymentHistory.append(PaymentsItems(payment, vehicle[0]))
+        payment_history.append(PaymentsItems(payment, vehicle[0]))
 
     if request.session.get('error_message') is not None:
         del request.session['error_message']
@@ -263,4 +262,4 @@ def getPaymentHistory(request):
     if request.session.get('pay_success') is not None:
         del request.session['pay_success']
 
-    return render(request, 'customers/payment_history.html', {"paymentHistory": paymentHistory})
+    return render(request, 'customers/payment_history.html', {"paymentHistory": payment_history})
