@@ -1,6 +1,6 @@
 """
-设计登录功能的所有接口
-由于登录界面三种用户都是一样的，所以单独列出来views
+Design all interfaces of login function
+Since the three users of the login interface are the same, the views are listed separately.
 """
 import json
 
