@@ -14,8 +14,7 @@ py manage.py migrate
 ```
 + Install dependencies in requirements.txt
 ```
-pip install -r requirements.txt
-# You can use 'pip freeze > requirements.txt' to generate requirements.txt
+pip install geocoder
 ```
 + Modify the database account and password in settings.py 
 + Run server
