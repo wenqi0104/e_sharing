@@ -79,7 +79,7 @@
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ using_amount }}</div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-battery-half fa-2x text-gray-300"></i>
+                                <i class="fas bi-funnel-fill fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,14 @@
                                 <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                     Total time rented
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ amount_time }}</div>
+{#                                <div id="amountTime" class="h5 mb-0 font-weight-bold text-gray-800">{{ amount_time }}</div>#}
+                                <div id="amountTime" value="sds" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                <script>
+                                    {#保留1位小数#}
+                                    var totalTime = {{ amount_time }};
+                                    totalTime = totalTime.toFixed(1)
+                                    document.getElementById("amountTime").innerText = totalTime + " hours";//修改
+                                </script>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-clock fa-2x text-gray-300"></i>
