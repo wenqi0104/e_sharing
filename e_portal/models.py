@@ -24,7 +24,7 @@ class Customers(models.Model):
     createDate = models.DateTimeField(default=timezone.now)
     updateDate = models.DateTimeField(auto_now=True)
     eligible = models.BooleanField(default=True)
-    avatar = models.ImageField(upload_to='resources/img/avatars', blank=True)
+    avatar = models.ImageField(upload_to='resources/img/avatars', default='resources/img/avatars/new_user.jpg')
 
 
 class Operators(models.Model):
