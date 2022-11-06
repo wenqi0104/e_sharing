@@ -5,13 +5,11 @@
 import json
 
 from django.shortcuts import render, redirect, HttpResponse
-from django.views import View
 from .. import models
 from . import globals
-import django.utils.timezone as timezone
 
 
-# 返回主页
+# return index page
 def index(request):
     if request.method == "GET":
         return render(request, 'pages/index.html')
@@ -19,7 +17,7 @@ def index(request):
         return render(request, 'pages/404.html')
 
 
-# 登录界面
+# login page
 def login(request):
     globals.user_id = None
     request.session.flush()
@@ -27,13 +25,13 @@ def login(request):
         return render(request, 'pages/login.html')
     else:  # POST
         name = request.POST.get('name')
-        email = request.POST.get('email')  # 暂时没有email判断重复注册的功能
+        email = request.POST.get('email')  # There is currently no email function for duplicate registration
         pwd = request.POST.get('pwd')
         type = request.POST.get('type')
         if type == "customer":  # 判断用户类型
             all = models.Customers.objects.all()
             for i in all:
-                if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
+                if i.email == email and i.password == pwd:  # If it matches, jump into the index page
                     globals.user_id = i.id
                     request.session['username'] = i.name
                     request.session['avatar'] = json.dumps(str(i.avatar))
@@ -41,9 +39,9 @@ def login(request):
         elif type == "operator":
             all = models.Operators.objects.all()
             for i in all:
-                if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
+                if i.email == email and i.password == pwd:
                     globals.user_id = i.id
-                    request.session['oid'] = i.id  # 设置session值
+                    request.session['oid'] = i.id
                     request.session['email'] = i.email
                     request.session['username'] = i.name
                     request.session['avatar'] = json.dumps(str(i.avatar))
@@ -51,40 +49,41 @@ def login(request):
         else:
             all = models.Managers.objects.all()
             for i in all:
-                if i.email == email and i.password == pwd:  # 如果匹配则进入主界面
+                if i.email == email and i.password == pwd:
                     globals.user_id = i.id
                     request.session['username'] = i.name
                     request.session['avatar'] = json.dumps(str(i.avatar))
                     return redirect("managers/")
-        return render(request, 'pages/login.html', {'login_error': "email or password error"})  # 密码/邮箱错误，则重新输入
+        # If the password or email address is incorrect, enter it again
+        return render(request, 'pages/login.html', {'login_error': "email or password error"})
 
 
-# 注册界面
+# register page
 def register(request):
     if request.method == "GET":
         return render(request, 'pages/register.html')
-    else:    #POST
+    else:    # POST
         name = request.POST.get('name')
-        email = request.POST.get('email')  #暂时没有email判断重复注册的功能
+        # There is currently no email function for duplicate registration
+        email = request.POST.get('email')
         pwd = request.POST.get('pwd')
-        if name == "" or email == "" or pwd=="":    #如果为空重新输入
+        if name == "" or email == "" or pwd == "":    # If inputs are empty
             return render(request, 'pages/register.html')
-        # print(name, email, pwd)
         models.Customers.objects.create(name=name, email=email, password=pwd)
-        return redirect("/vehicles")
+        return redirect("/")
 
 
-# 重置密码
+# reset password
 def pwd_reset(request):
     if request.method == "GET":
         return render(request, 'pages/pwd_reset.html')
     # else:
 
 
-# error404动态
+# error404
 def Error404(request):
     if request.method == "GET":
         all_customers = models.Customers.objects.all()
-        for i in all_customers: #for debug
-            print(i.id, i.name, i.password, i.email)  #for debug
+        for i in all_customers:     # for debug
+            print(i.id, i.name, i.password, i.email)  # for debug
         return render(request, 'pages/404.html')
