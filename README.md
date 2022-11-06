@@ -9,7 +9,9 @@ py manage.py createsuperuser
 ```
 + Install dependencies in requirements.txt
 ```
+pip install django 
 pip install geocoder
+pip install Pillow 
 ```
 + Modify the database account and password in settings.py 
 + Run server
