@@ -11,16 +11,16 @@ from .. import models
 
 def graphPage(request):
     """
-    返回每种类型车的数量
-    返回正在使用和可使用车的数量
-    返回总盈利额
-    返回每个月的盈利额
-    返回customer总数
-    返回所有车行驶总时长
+    Returns the number of cars of each type
+    Returns the number of cars in use and available
+    Return total profit
+    Returns the monthly profit
+    Returns the total number of customers
+    Returns the total travel time of all vehicles
     :param request:
     :return:
     """
-    # 返回每种类型车的数量
+    # Returns the number of cars of each type
     type_car = ["bike", "scooter", "car"]
     type_list = []
     for i in range(len(type_car)):
@@ -33,7 +33,7 @@ def graphPage(request):
     scooter_amount = type_list[1]
     car_amount = type_list[2]
 
-    # 返回正在使用和可使用车的数量
+    # Returns the number of cars in use and available
     status_bike = ["using", "available"]
     status_list = []
     for i in range(len(status_bike)):
@@ -45,14 +45,14 @@ def graphPage(request):
     using_amount = status_list[0]
     available_amount = status_list[1]
 
-    # 返回总盈利额
+    # Return total profit
     payment_successful = models.Payments.objects.filter(status="success")
     sum_payment = 0
     for i in payment_successful:
         amount2 = i.amount
         sum_payment += amount2
 
-    # 返回每个月的盈利额
+    # Returns the monthly profit
     month = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
     month_payment_list = []
     for i in range(len(month)):
@@ -62,13 +62,13 @@ def graphPage(request):
             sum_month_payment += x.amount
         month_payment_list.append(sum_month_payment)
 
-    # 返回customer总数
+    # Returns the total number of customers
     customer = models.Customers.objects.all()
     amount_customer = 0
     for i in customer:
         amount_customer += 1
 
-    # 返回所有车行驶总时长
+    # Returns the total travel time of all vehicles
     vehicle = models.Vehicles.objects.all()
     amount_time = 0
     for i in vehicle:
@@ -82,7 +82,7 @@ def graphPage(request):
 
 def tablePage(request):
     """
-    返回车辆的所有信息
+    Return all information about the vehicle
     :param request:
     :return:
     """

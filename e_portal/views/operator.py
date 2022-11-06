@@ -1,5 +1,5 @@
 """
-operator用户的所有接口
+All interfaces for operator users
 """
 import json
 import math
@@ -46,9 +46,9 @@ class usingItem:
 
 
 # Create your views here.
-# base_log：经度基准点，
-# base_lat：维度基准点，
-# radius：距离基准点的半径
+# base_log：longitude reference point,
+# base_lat：latitude reference point,
+# radius：Radius from datum point
 def generate_random_gps(base_log=-4.25889, base_lat=55.85806, radius=3000):
     radius_in_degrees = radius / 111300
     u = float(random.uniform(0.0, 1.0))
@@ -88,7 +88,7 @@ def moveVehicles(request):
 
 def getUsingVehicles(request):
     """
-    被使用的车
+    used car
     :param request:
     :return: list
     """
@@ -105,7 +105,7 @@ def getUsingVehicles(request):
 
 def getUnUsingVehicles(request):
     """
-    未使用的车, move:修改经纬度
+    Unused car, move: modify latitude and longitude
     :param request:
     :return:
     """
@@ -119,7 +119,7 @@ def getUnUsingVehicles(request):
 
 def getDealVehicles(request):
     """
-    需要处理的车,charge + repair:broken->available, low battery->available
+    car that needs to be handled,charge + repair:broken->available, low battery->available
     :param request:
     :return:
     """
@@ -214,8 +214,8 @@ def track(request):
 
 def getVehicleDetails(request, vehicles_id):
     """
-    根据前端返回的id，查找特定id的vehicle的信息
-    返回这个车的所有信息
+    According to the id returned by the front end, find the information of the vehicle with a specific id
+    Return all information about this car
     path('/vehicle/vehicle_details/', ... )
     :param vid:
     :param request:
