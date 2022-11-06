@@ -18,7 +18,7 @@
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="../../resources/vendor/leaflet/leaflet.css"/>
     <script src="../../resources/vendor/leaflet/leaflet.js"></script>
-    <!-- bootstrap icon库 & button 样式库 -->
+    <!-- bootstrap icon库 & button style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="//brick.a.ssl.fastly.net/Roboto:400"/>
 
@@ -50,43 +50,6 @@
 {#            <div style="display: flex;">#}
             <div style="padding-right: 38px">
                 <div style="position: relative; width: 100%; height: 650px; margin: 20px 0 20px 20px; box-shadow: 0px 7px 7px #c8c8c8;">
-                    <!-- information card -->
-{#                    <div style="position: absolute; z-index: 99; width: 500px;height: 300px" >#}
-{#                        <!-- Dropdown Card Example -->#}
-{#                        <div class="card shadow mb-4" >#}
-{#                            <!-- Card Body -->#}
-{#                            <div class="card-body">#}
-{#                                <div class="row">#}
-{#                                    <div class="col-lg-6 col-md-6">#}
-{#                                        {% load static %}#}
-{#                                        <img src="" class="img-responsive" alt="car pic"#}
-{#                                             width=100% height=100% style="border-radius: 10px; box-shadow: 0px 5px 5px #c8c8c8" id="img{{ details.id }}">#}
-{#                                        <script>#}
-{#                                            document.getElementById('img{{ details.id }}').src = 'http://127.0.0.1:8000/' + '{{ details.cover }}';#}
-{#                                        </script>#}
-{#                                    </div>#}
-{#                                    <div class="col-lg-6 col-md-6">#}
-{#                                        <p class="text-dark">Type: &nbsp<b class="text-body">{{ details.type }}</b></p>#}
-{#                                        <p class="text-dark">Color: &nbsp<b class="text-body">{{ details.color }}</b></p>#}
-{#                                        <p class="text-dark">Battery: &nbsp<b#}
-{#                                                class="text-body">{{ details.batteryPercentage }}</b></p>#}
-{#                                        <p class="text-dark">Current Location: &nbsp<b#}
-{#                                                class="text-body">{{ details.locName }}</b></p>#}
-{#                                        <p class="text-dark">Price: &nbsp<b class="text-success">£ {{ details.price }} per#}
-{#                                            hour</b></p>#}
-{#                                        <p id="ellipsis-ex" class="card-text mb-1"#}
-{#                                       style="display: -webkit-box;display: -moz-box;white-space: pre-wrap;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical; -webkit-line-clamp:2;">Detailed information:{{ details.description }}</p>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-
-
-
-
-
-
                     <div style="position: absolute; top:0; right:0;z-index: 99; width: 300px;height: 200px;" >
                         {% load static %}
                         <img src="" alt="car pic"
@@ -98,8 +61,6 @@
                             <p class="mb-2 text-gray-800">{{ details.description }}</p>
                         </div>
                     </div>
-
-
 
 
 {#                    底部卡片#}
@@ -174,12 +135,6 @@
                     </div>
 {#                    map#}
                     <div id="mapid"  style="position: absolute; z-index: 0; width: 100%; height: 100%;  box-shadow: 0px 7px 7px #c8c8c8; border-radius: 10px"></div>
-{#                    <a href="#" class="btn btn-success btn-icon-split" style="position: absolute; right: 100px;top:75%"  >#}
-{#                        <span class="icon text-white-50">#}
-{#                            <i class="fas fa-check"></i>#}
-{#                        </span>#}
-{#                        <span class="text">Rent</span>#}
-{#                    </a>#}
                     <div style="position: absolute; top:50%; right: 100px;box-shadow: 0px 7px 7px #c8c8c8; opacity: 0.9" >
                       <button method="post" href="#" class="btn btn-success btn-icon-split" data-toggle="modal" data-target="#Order{{ details.id }}">
                             <span class="icon text-white-50">
