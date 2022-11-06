@@ -56,7 +56,7 @@ def login(request):
                     request.session['username'] = i.name
                     request.session['avatar'] = json.dumps(str(i.avatar))
                     return redirect("managers/")
-        return render(request, 'pages/login.html')  # 密码/邮箱错误，则重新输入
+        return render(request, 'pages/login.html', {'login_error': "email or password error"})  # 密码/邮箱错误，则重新输入
 
 
 # 注册界面
