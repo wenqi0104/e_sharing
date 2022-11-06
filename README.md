@@ -16,4 +16,12 @@ pip install geocoder
 ```
 py manage.py runserver
 ```
-
++ Operator account
+```
+account: go@gmail.com  
+password: go123
+```
++ Manager account
+```
+account: manager@gmail.com  
+password: manager123
