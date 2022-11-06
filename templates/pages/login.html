@@ -21,15 +21,33 @@
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
 
+<style>
+    #loginError{
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        width: 100%;
+        margin: auto;
+    }
 
+</style>
 
 </head>
 
-<body class="bg-gradient-primary">
-    <div class="container">
-
+<body class="bg-gradient-primary pt-5" style="position: relative;">
+        {#error message session#}
+        {% if login_error %}
+        <div class="alert alert-danger alert-dismissible fade show" id="loginError" role="alert">
+          <strong>Ohhh!</strong> {{ login_error }}.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+    <div class="container" >
         <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mt-5">
 
             <div class="col-xl-10 col-lg-12 col-md-9">
 
