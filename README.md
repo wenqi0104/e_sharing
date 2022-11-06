@@ -7,11 +7,6 @@
 ```
 py manage.py createsuperuser
 ```
-+ Execute commands in terminal for migrations
-```
-py manage.py makemigrations
-py manage.py migrate
-```
 + Install dependencies in requirements.txt
 ```
 pip install geocoder
@@ -21,3 +16,4 @@ pip install geocoder
 ```
 py manage.py runserver
 ```
+
